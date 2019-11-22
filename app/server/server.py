@@ -7,30 +7,17 @@ import urllib.request
 from urllib.parse import urlparse
 import json
 import os.path
-from flask import Flask, render_template
-
+from flask import Flask, render_template, request, jsonify
+import random
+import json
 app = Flask(__name__, static_folder="../static/dist", template_folder="../static")
 
-search="Russia"
-
-search_query='text_en:'+search+'%20OR%20text_ru:'+search+'%20OR%20text_de:'+search
-
-inurl='http://ec2-3-86-177-141.compute-1.amazonaws.com:8984/solr/C1/select?q='+search_query+'&wt=json&indent=true&rows=20'
-
-
-# In[49]:
-
-
-print(inurl)
-data = urllib.request.urlopen(inurl)
-docs = json.load(data)['response']['docs']
-res=""
-for row in docs:
-    print(row['id'])
-    res+=row['id']+"\n"
-
-
-# In[ ]:
+def doSearch(search):
+	search_query='text_en:'+search+'%20OR%20text_ru:'+search+'%20OR%20text_de:'+search
+	inurl='http://18.218.221.88:8984/solr/IRF19P1/select?q='+search_query+'&wt=json&indent=true&rows=20'
+	data = urllib.request.urlopen(inurl)
+	docs = json.load(data)['response']['docs']
+	return docs
 
 
 def get_tweet_sentiment(self, tweet):
@@ -48,39 +35,24 @@ def get_tweet_sentiment(self, tweet):
         else:
             return 'negative'
 
-
-# In[47]:
-
-
-@app.route("/")
+@app.route('/')
 def index():
-    return render_template("index.html")
+  return render_template('index.html')
 
 
-@app.route("/hello") # take note of this decorator syntax, it's a common pattern
+@app.route('/result', methods=['GET'])
 def hello():
-    return "Hello World!"
+    return json.dumps(result)
 
-@app.route('/home')
-def new_hello():
-    # It is good practice to only call a function in your route end-point,
-    # rather than have actual implementation code here.
-    # This allows for easier unit and integration testing of your functions.
-    return get_hello()
-
-
-def get_hello():
-    greeting_list = ['Ciao', 'Hei', 'Salut', 'Hola', 'Hallo', 'Hej']
-    return random.choice(greeting_list)
+@app.route('/search', methods=['POST'])
+def search():
+	if request.method == 'POST':
+		a = request.data
+		b= a.decode('utf-8')
+		c = json.loads(b)
+		queryTerm = c.get('queryTerm')
+		result = doSearch(queryTerm)
+		return json.dumps(result)
 
 if __name__ == '__main__':
     app.run()
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:

@@ -35,11 +35,13 @@
     "css-loader": "^0.28.4",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.11.2",
-    "jquery": "^3.2.1",
     "react": "^15.6.1",
-    "react-bootstrap": "^0.31.0",
+    "react-bootstrap": "^v0.33.0",
     "react-dom": "^15.6.1",
     "style-loader": "^0.18.2",
     "webpack": "^3.0.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15"
   }
 }

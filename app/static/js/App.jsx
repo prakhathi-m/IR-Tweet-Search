@@ -2,9 +2,7 @@ import React from "react";
 import Search from "./Search";
 
 require('../css/fullstack.css');
-var $ = require('jquery');
 
-import HeaderBackgroundImage from '../images/header.jpg';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -12,9 +10,10 @@ export default class App extends React.Component {
     }
 
     render () {
+      console.log(this.props)
         return (
           <div className='header-contents'>
-                <Search />
+                <Search/>
           </div>
         );
     }
