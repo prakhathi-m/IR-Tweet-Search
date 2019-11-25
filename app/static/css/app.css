@@ -1,0 +1,140 @@
+body {
+  font-size: 14px !important;
+  font-family: Roboto, sans-serif;
+}
+::placeholder {
+  font-size: 14px;
+}
+.pad-5 {
+  padding: 5px;
+}
+a {
+  text-decoration: underline;
+  margin-right: 10px;
+}
+.hide {
+  display: none;
+}
+.flex {
+  display: flex;
+}
+.row {
+  flex-wrap: nowrap !important;
+}
+.space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.input-group-addon.search-button {
+  padding: 4px 13px;
+  background: #5866c5;
+}
+.header-contents button {
+    font-size: 15px;
+    font-weight: 300;
+}
+.wrapper {
+  padding: 40px 20px;
+}
+.wrapper .side-nav {
+  background: #b2bed4;
+  margin-right: 10px;
+}
+.main-content {
+  min-height: 400px;
+}
+.header-contents button:focus {
+    outline: None;
+    background: None;
+}
+.header-contents button:focus svg {
+  color: black;
+}
+.checkbox input[type=checkbox] {
+  margin-right: 5px;
+}
+.input-group.filter input {
+  width: 200px;
+  max-width: 200px;
+}
+main {
+  margin-left: 250px;
+}
+main .search-bar {
+  width: 50%;
+  margin: 20px auto;
+  display: flex;
+}
+input.form-control {
+  font-size: 14px !important;
+}
+.well {
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+  margin-bottom: 20px;
+  min-height: 20px;
+  padding: 19px;
+}
+.well label {
+  display: block;
+  margin: 0;
+  font-weight: 100;
+}
+.well label.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0 0;
+  align-items: center;
+}
+.default.date-range-toggle.btn.btn-default.date-range-toggle {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+    padding: 9px 7px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.tabs{padding: 20px;}
+.tabs button {
+  color: black !important;
+}
+.drawer hr {
+  border-color: #fff;
+}
+.sort-bar {
+  align-items: center;
+}
+.sort-bar span:first-of-type {
+  display: inline-block;
+  min-width: 50px;
+  margin-right: 10px;
+}
+.sort-bar select.form-control {
+  height: 30px;
+  padding: 2px;
+}
+.sort-bar select.form-control:focus {
+    border-color: #bebebe;
+    box-shadow: none;
+}
+.sort-bar select.form-control option {
+  font-size: 14px;
+}
+.sort-bar .box {
+  display: flex;
+  border: 1px solid #6b5c6b55;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  height: 30px;
+}
+.sort-bar .box.active {
+  background: #f1f1f1;
+  border-color: #a2aadc;
+}
+ .sort-bar .box:first-of-type {
+   margin-left: 10px;
+ }
