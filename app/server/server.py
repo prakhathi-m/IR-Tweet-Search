@@ -16,35 +16,37 @@ def doSearch(search,lang,country,date,verified,sor,dir,sentiment):
 	en=search
 	pt=search
 
-	lang=translator.detect(search).lang
-	if lang=='en':
+	tweet_lang=translator.detect(search).lang
+	if tweet_lang=='en':
 		try:
-			pt=translator.translate(search, dest='pt')
+			pt=translator.translate(search, dest='pt').text
 		except:
 			pt=search
 		try:
-			hi=translator.translate(search, dest='hi')
+			hi=translator.translate(search, dest='hi').text
 		except:
 			hi=search
-	elif lang=='pt':
+	elif tweet_lang=='pt':
 		try:
-			en=translator.translate(search, dest='en')
+			en=translator.translate(search, dest='en').text
 		except:
 			en=search
 		try:
-			hi=translator.translate(search, dest='hi')
+			hi=translator.translate(search, dest='hi').text
 		except:
 			hi=search
-	elif lang=='hi':
+	elif tweet_lang =='hi':
 		try:
-			en=translator.translate(search, dest='en')
+			en=translator.translate(search, dest='en').text
 		except:
 			en=search
 		try:
-			pt=translator.translate(search, dest='pt')
+			pt=translator.translate(search, dest='pt').text
 		except:
 			pt=search
-
+	hi = urllib.parse.quote(hi.replace(':', '\:'))
+	en = urllib.parse.quote(en.replace(':', '\:'))
+	pt = urllib.parse.quote(pt.replace(':', '\:'))
 	f_lang=""
 	s=""
 	if lang is not None and len(lang) > 0:
@@ -72,7 +74,7 @@ def doSearch(search,lang,country,date,verified,sor,dir,sentiment):
 		f_date="&fq=tweet_date:["+date[0]+"%20TO%20"+date[1]+"]"
 
 	print(date)
-	search_query=hi+ "%20" + en+ "%20" + pt
+	search_query= "text_hi:"+ hi + "%20OR%20" + "text_en:" + en+ "%20OR%20" + "text_pt:" + pt
 	filter=f_lang+f_country+f_verified+f_date+f_sentiment
 	inurl='http://ec2-3-86-177-141.compute-1.amazonaws.com:8984/solr/IRF19P4/select?'+filter+'&q='+search_query+s+'&wt=json&indent=true&rows=100'
 	print(inurl)
