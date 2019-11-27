@@ -35,6 +35,7 @@ export default class App extends React.Component {
           date: '',
           dir: 'desc',
           sort: '',
+          sentiment: [],
         };
         this.handleApply = this.handleApply.bind(this);
         this.onSearch = this.onSearch.bind(this);
@@ -44,9 +45,9 @@ export default class App extends React.Component {
 
     }
     componentDidUpdate(prevProps, prevState)  {
-      const { country, language, verified, date, sort, dir } = this.state;
+      const { country, language, verified, date, sort, dir, sentiment } = this.state;
       if(prevState.country !== country || prevState.language !== language || prevState.verified !== verified || prevState.date !== date ||
-        prevState.sort !== sort || prevState.dir !== dir) {
+        prevState.sort !== sort || prevState.dir !== dir || prevState.sentiment !== sentiment) {
         this.onSearch();
       }
       console.log(this.state.data, this.state);
@@ -68,6 +69,8 @@ export default class App extends React.Component {
     }
     showTweets(tweet) {
       const sentiment = (tweet['sentiment'] == 'positive') ? 'smile' : (tweet['sentiment'] == 'negative') ? 'frown' : 'meh';
+      const color = (tweet['sentiment'] == 'positive') ? '#2bf52b' : (tweet['sentiment'] == 'negative') ? 'red' : 'orange';
+
       return (
         <Well bsSize="large">
           <label>{moment(tweet["tweet_date"]).format('MMM DD, YYYY')} - {tweet['tweet_text']}</label>
@@ -78,21 +81,21 @@ export default class App extends React.Component {
              <span><FontAwesomeIcon icon={["fas", "retweet"]} style={{ color: baseColor }}/> </span>
              <span>{tweet["retweet_count"]} </span>
              <span className="pad-5"><FontAwesomeIcon icon={["fas", "heart"]} style={{ color: baseColor }}/></span>
-             {tweet["like_count"]} <FontAwesomeIcon icon={["fas", sentiment]} size="2x" style={{ color: '#ffc107' }}/>
+             {tweet["like_count"]} <FontAwesomeIcon icon={["fas", sentiment]} size="2x" style={{ color: color }}/>
              </span>
            </label>
         </Well>
       )
     }
     onSearch() {
-      const {queryTerm, country, language, date, verified, sort, dir } = this.state;
+      const {queryTerm, country, language, date, verified, sort, dir, sentiment } = this.state;
       let arr = [];
       if(!_.isEmpty(date)) {
         let label = _.split(date, '-');
         arr = _.map(label, (dt) => moment(dt).format());
       }
       if(!_.isEmpty(queryTerm)) {
-        const params = {queryTerm: queryTerm, country: country, lang: language, date: arr, ...(verified && {verified: true}), ...(!_.isEmpty(sort) && {sort: sort, dir: dir})};
+        const params = {queryTerm: queryTerm, country: country, lang: language, date: arr, sentiment: sentiment, ...(verified && {verified: true}), ...(!_.isEmpty(sort) && {sort: sort, dir: dir})};
         console.log(params);
         fetch('http://127.0.0.1:5000/search', {
           method: 'POST',
@@ -107,18 +110,7 @@ export default class App extends React.Component {
       return _.map(object, (obj) => this.showTweets(obj));
     }
     getGraph() {
-      const data = this.state.data;
-      const arr = _.map(data, (d) => d['retweet_count'] );
-      const arr1 =  _.map(data, (d) => d['like_count'] );
-      console.log(arr[0][0]);
 
-      return (<Chart
-          chartType="ScatterChart"
-          data={[  ["Age", "Weight"],[4.4,6] , [arr[0][0] , arr[1][0] ]    ]}
-          width="100%"
-          height="400px"
-          legendToggle
-        />);
     }
     onCheck(isChecked, field, value) {
       if (field != 'verified') {
@@ -201,6 +193,17 @@ export default class App extends React.Component {
                   label="Verified User"
                   onCheck={(e, checked) => this.onCheck(checked, 'verified')}
                 />
+                <hr/>
+                <label>Sentiment</label>
+                <Checkbox
+                  label="Positive"
+                  onCheck={(e, checked) => this.onCheck(checked, 'sentiment', 'positive')}
+                />
+                <Checkbox
+                  label="Neutral"
+                  onCheck={(e, checked) => this.onCheck(checked, 'sentiment', 'neutral')}
+                />
+                <hr/>
             </Drawer>}
             <main>
             <div className="search-bar">
@@ -240,7 +243,7 @@ export default class App extends React.Component {
               <Tab label="Analytics" value="graph">
               <p>New Graph</p>
               <div id="graph"></div>
-              {this.state.searchClicked && this.getGraph()}
+              {(this.state.searchClicked && this.state.data) && this.getGraph()}
               </Tab>
             </Tabs>
             </main>
