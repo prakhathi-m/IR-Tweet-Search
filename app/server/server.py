@@ -5,12 +5,46 @@ import os.path
 from flask import Flask, render_template, request, jsonify, Response
 import random
 import json
+from googletrans import Translator
 app = Flask(__name__, static_folder="../static/dist", template_folder="../static")
 
 docs=[]
 def doSearch(search,lang,country,date,verified,sor,dir,sentiment):
 	global docs
-	search_query='text_en:'+search+'%20OR%20text_ru:'+search+'%20OR%20text_de:'+search+'%20OR%20tweet_text:'+search
+	translator = Translator()
+	hi=search
+	en=search
+	pt=search
+
+	lang=translator.detect(search).lang
+	if lang=='en':
+		try:
+			pt=translator.translate(search, dest='pt')
+		except:
+			pt=search
+		try:
+			hi=translator.translate(search, dest='hi')
+		except:
+			hi=search
+	elif lang=='pt':
+		try:
+			en=translator.translate(search, dest='en')
+		except:
+			en=search
+		try:
+			hi=translator.translate(search, dest='hi')
+		except:
+			hi=search
+	elif lang=='hi':
+		try:
+			en=translator.translate(search, dest='en')
+		except:
+			en=search
+		try:
+			pt=translator.translate(search, dest='pt')
+		except:
+			pt=search
+
 	f_lang=""
 	s=""
 	if lang is not None and len(lang) > 0:
@@ -38,6 +72,7 @@ def doSearch(search,lang,country,date,verified,sor,dir,sentiment):
 		f_date="&fq=tweet_date:["+date[0]+"%20TO%20"+date[1]+"]"
 
 	print(date)
+	search_query=hi+ "%20" + en+ "%20" + pt
 	filter=f_lang+f_country+f_verified+f_date+f_sentiment
 	inurl='http://ec2-3-86-177-141.compute-1.amazonaws.com:8984/solr/IRF19P4/select?'+filter+'&q='+search_query+s+'&wt=json&indent=true&rows=100'
 	print(inurl)
