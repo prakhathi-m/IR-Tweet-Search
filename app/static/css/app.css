@@ -8,7 +8,7 @@ body {
 .pad-5 {
   padding: 5px;
 }
-a {
+.well a {
   text-decoration: underline;
   margin-right: 10px;
 }
@@ -20,6 +20,9 @@ a {
 }
 .row {
   flex-wrap: nowrap !important;
+}
+.text-center {
+  text-align: center;
 }
 .space-between {
   display: flex;
@@ -54,9 +57,20 @@ a {
 .checkbox input[type=checkbox] {
   margin-right: 5px;
 }
+.daterangepicker .calendar th, .daterangepicker .calendar td {
+  padding: 5px;
+}
 .input-group.filter input {
-  width: 200px;
+  width: 180px;
   max-width: 200px;
+}
+ul.pagination {
+  display: inline-block;
+}
+.pagination li {
+    display: inline-block;
+    border: 1px solid #1c37da;
+    padding: 5px;
 }
 main {
   margin-left: 250px;

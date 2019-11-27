@@ -3,22 +3,15 @@ import Search from "./Search";
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 require('../css/app.css');
-var moment  = require('moment');
+import moment from 'moment';
 import _ from 'lodash';
-import { Row, Col, FormControl, Form, Button, Well } from "react-bootstrap";
+import { Row, Col, FormControl, Form, Button, Well, Pagination } from "react-bootstrap";
 import { Drawer, Tabs, IconButton, Tab, Checkbox } from 'material-ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 var baseColor = '#5866c5';
 import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
 import Chart from 'react-google-charts';
 
-function Iframe(props) {
-      return (
-        <div
-          dangerouslySetInnerHTML={{ __html: props.iframe ? props.iframe : "" }}
-        />
-      );
-    }
 export default class App extends React.Component {
     constructor(props) {
         super(props);
@@ -29,6 +22,7 @@ export default class App extends React.Component {
           queryTerm: '',
           activeTab: 'search-result',
           searchClicked: false,
+          data: [],
           country: [],
           language: [],
           verified: false,
@@ -36,21 +30,34 @@ export default class App extends React.Component {
           dir: 'desc',
           sort: '',
           sentiment: [],
+          currentPage: 1,
+          totalDocs: '',
+          startPage: 1,
+          finishPage: 10,
+          currentData: [],
         };
         this.handleApply = this.handleApply.bind(this);
         this.onSearch = this.onSearch.bind(this);
         this.getData = this.getData.bind(this);
         this.onCheck = this.onCheck.bind(this);
         this.getGraph = this.getGraph.bind(this);
-
+        this.getPagination = this.getPagination.bind(this);
+        this.onPageClick = this.onPageClick.bind(this);
     }
     componentDidUpdate(prevProps, prevState)  {
-      const { country, language, verified, date, sort, dir, sentiment } = this.state;
+      const { country, language, verified, date, sort, dir, sentiment, currentPage, startPage, data } = this.state;
       if(prevState.country !== country || prevState.language !== language || prevState.verified !== verified || prevState.date !== date ||
         prevState.sort !== sort || prevState.dir !== dir || prevState.sentiment !== sentiment) {
         this.onSearch();
       }
-      console.log(this.state.data, this.state);
+      if(prevProps.currentPage !== currentPage) {
+            if(currentPage - startPage > 6 ) {
+              this.setState({startPage: currentPage, finishPage: currentPage + 10});
+            } else if (currentPage - startPage <=2 && currentPage > 6) {
+              this.setState({startPage: currentPage - 4, finishPage: currentPage + 6});
+            }
+        }
+        const dt = _.slice(data, (currentPage-1)*10 +1, currentPage*10 +1);
     }
     handleApply(evt, picker) {
       let { startDate, endDate } = picker;
@@ -69,8 +76,8 @@ export default class App extends React.Component {
     }
     showTweets(tweet) {
       const sentiment = (tweet['sentiment'] == 'positive') ? 'smile' : (tweet['sentiment'] == 'negative') ? 'frown' : 'meh';
-      const color = (tweet['sentiment'] == 'positive') ? '#2bf52b' : (tweet['sentiment'] == 'negative') ? 'red' : 'orange';
-
+      const color = (tweet['sentiment'] == 'positive') ? '#3fd63f' : (tweet['sentiment'] == 'negative') ? 'red' : 'orange';
+      console.log(tweet["tweet_date"], moment(tweet["tweet_date"]).format('LL'));
       return (
         <Well bsSize="large">
           <label>{moment(tweet["tweet_date"]).format('MMM DD, YYYY')} - {tweet['tweet_text']}</label>
@@ -92,7 +99,7 @@ export default class App extends React.Component {
       let arr = [];
       if(!_.isEmpty(date)) {
         let label = _.split(date, '-');
-        arr = _.map(label, (dt) => moment(dt).format());
+        arr = _.map(label, (dt) => moment(dt).format().slice(0,19)+'Z');
       }
       if(!_.isEmpty(queryTerm)) {
         const params = {queryTerm: queryTerm, country: country, lang: language, date: arr, sentiment: sentiment, ...(verified && {verified: true}), ...(!_.isEmpty(sort) && {sort: sort, dir: dir})};
@@ -102,11 +109,37 @@ export default class App extends React.Component {
           body: JSON.stringify(params)
         })
           .then(response => response.json())
-          .then(data => this.setState({ data: data, searchClicked: true }));
+          .then(data => {
+            this.setState({ data: data, searchClicked: true });
+            if(_.size(data) > 0) {
+              this.setState({currentData: _.slice(data, 1, 11), currentPage:1, startPage: 1, finishPage: 10});
+            }
+          });
       }
     }
+    onPageClick(number) {
+      const { startPage, finishPage, data} = this.state;
+      let dt = _.slice(data, 1, 11);
+      if (number > 1) {
+        dt = _.slice(data, (number-1)*10 +1, number*10 +1);
+      }
+      this.setState({currentPage: number, currentData: dt});
+      console.log(number, startPage, finishPage, dt);
+    }
+    getPagination() {
+      const {currentPage, startPage, finishPage, data} = this.state;
+      const items = []
+      for (let number = startPage; number <= finishPage; number++) {
+        items.push(
+          <Pagination.Item key={number} active={number === this.state.currentPage} onClick={() => this.onPageClick(number)}>
+            {number}
+          </Pagination.Item>,
+        );
+      }
+      return items;
+    }
     getData() {
-      const object = this.state.data;
+      const object = this.state.currentData;
       return _.map(object, (obj) => this.showTweets(obj));
     }
     getGraph() {
@@ -163,14 +196,16 @@ export default class App extends React.Component {
                 <label style={{'margin': '10px 0'}}>Country</label>
                 <Checkbox
                   label="USA"
+                  iconStyle={{fill: 'white'}}
                   onCheck={(e, checked) => this.onCheck(checked, 'country', 'USA')}
                 />
                 <Checkbox
                   label="Brazil"
                   onCheck={(e, checked) => this.onCheck(checked, 'country', 'Brazil')}
-
+                  iconStyle={{fill: 'white'}}
                 />
                 <Checkbox
+                  iconStyle={{fill: 'white'}}
                   onCheck={(e, checked) => this.onCheck(checked, 'country', 'India')}
                   label="India"
                 />
@@ -178,30 +213,41 @@ export default class App extends React.Component {
                 <label>Language</label>
                 <Checkbox
                   label="English"
+                  iconStyle={{fill: 'white'}}
                   onCheck={(e, checked) => this.onCheck(checked, 'language', 'en')}
                 />
                 <Checkbox
                   label="Hindi"
+                  iconStyle={{fill: 'white'}}
                   onCheck={(e, checked) => this.onCheck(checked, 'language', 'hi')}
                 />
                 <Checkbox
                   label="Portugese"
+                  iconStyle={{fill: 'white'}}
                   onCheck={(e, checked) => this.onCheck(checked, 'language', 'pt')}
                 />
                 <hr/>
                 <Checkbox
                   label="Verified User"
+                  iconStyle={{fill: 'white'}}
                   onCheck={(e, checked) => this.onCheck(checked, 'verified')}
                 />
                 <hr/>
                 <label>Sentiment</label>
                 <Checkbox
                   label="Positive"
+                  iconStyle={{fill: 'white'}}
                   onCheck={(e, checked) => this.onCheck(checked, 'sentiment', 'positive')}
                 />
                 <Checkbox
                   label="Neutral"
                   onCheck={(e, checked) => this.onCheck(checked, 'sentiment', 'neutral')}
+                  iconStyle={{fill: 'white'}}
+                />
+                <Checkbox
+                  iconStyle={{fill: 'white'}}
+                  label="Neutral"
+                  onCheck={(e, checked) => this.onCheck(checked, 'sentiment', 'negative')}
                 />
                 <hr/>
             </Drawer>}
@@ -225,7 +271,7 @@ export default class App extends React.Component {
               {!this.state.searchClicked && <p>Enter the query term and search!!! </p>}
               {(this.state.searchClicked && _.isEmpty(this.state.data)) && <p>No Results Found for {this.state.queryTerm}</p>}
               {(this.state.searchClicked && !_.isEmpty(this.state.data)) && <div>
-              <label className="space-between"><span>Found {_.size(this.state.data)} Records for <b>{this.state.queryTerm}</b>:</span>
+              <label className="space-between"><span>Showing page {this.state.currentPage}. Found {_.size(this.state.data)} Records for <b>{this.state.queryTerm}</b>:</span>
                 <div className="flex sort-bar">
                 <span>Sort By: </span>
                 <FormControl componentClass="select" value={this.state.sort} onChange={(e) => this.setState({ sort: e.target.value })}>
@@ -238,7 +284,16 @@ export default class App extends React.Component {
                 <span className={this.state.dir == 'desc' ? 'box active' : 'box'} onClick={() => this.setState({dir: 'desc'})}><FontAwesomeIcon icon={["fas", "arrow-down"]} style={{ color: baseColor }}/></span>
                 </div>
               </label>
-              <div>{!_.isEmpty(this.state.data) && this.getData()}</div></div>}
+              <div>{!_.isEmpty(this.state.data) && <div>{this.getData()}
+              <div className="text-center">
+                <Pagination>
+                  <Pagination.First onClick={() => this.onPageClick(this.state.currentPage - 1)}/>
+                  {this.getPagination()}
+                  <Pagination.Last onClick={() => this.onPageClick(this.state.currentPage + 1)}/>
+                </Pagination>
+                </div>
+                </div>
+              }</div></div>}
               </Tab>
               <Tab label="Analytics" value="graph">
               <p>New Graph</p>
