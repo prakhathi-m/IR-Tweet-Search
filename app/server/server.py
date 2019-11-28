@@ -78,9 +78,16 @@ def doSearch(search,lang,country,date,verified,sor,dir,sentiment):
 	filter=f_lang+f_country+f_verified+f_date+f_sentiment
 	inurl='http://ec2-3-86-177-141.compute-1.amazonaws.com:8984/solr/IRF19P4/select?'+filter+'&q='+search_query+s+'&wt=json&indent=true&rows=100'
 	print(inurl)
-	data = urllib.request.urlopen(inurl)
-	count=json.load(data)['response']['numFound']
-	docs = json.load(data)['response']['docs']
+	data1 = urllib.request.urlopen(inurl)
+	data2 = urllib.request.urlopen(inurl)
+
+	print("check1")
+	count=0
+	count=json.load(data1)['response']['numFound']
+	print("check2")
+
+	docs = json.load(data2)['response']['docs']
+	print(docs)
 	return [docs,count]
 
 @app.route('/')
