@@ -100,10 +100,11 @@ export default class App extends React.Component {
         })
           .then(response => response.json())
           .then(data => {
-            this.setState({ data: data, searchClicked: true });
+			console.log(data[0], _.slice(data[0], 0, 10));
+            this.setState({ data: data[0], searchClicked: true });
             const len = _.size(data);
             if(len > 0) {
-              this.setState({currentData: _.slice(data, 0, 11), currentPage:1, startPage: 1, finishPage: Math.floor(len/10)});
+              this.setState({currentData: _.slice(data[0], 0, 10), currentPage:1, startPage: 1, finishPage: Math.floor(len/10)});
             }
           });
       }
@@ -133,6 +134,215 @@ export default class App extends React.Component {
       return _.map(object, (obj) => this.showTweets(obj));
     }
     getGraph() {
+		const data = this.state.data;
+      const arr = _.map(data, (d) => d['retweet_count'] );
+      const arr1 =  _.map(data, (d) => d['like_count'] );
+	  const CountryArr = _.map(data, (d) => d['country'] );
+	  const DateArr = _.map(data, (d) => d['tweet_date'] );
+	  const SentimentArr = _.map(data, (d) => d['sentiment'] );
+	  const LangArr = _.map(data, (d) => d['tweet_lang'] );	  
+	  const Eng = [];
+	  const Hin = [];
+	  const Port = [];  
+	  const DateArray = [];
+	  var Engdict = {};
+	  var i = 0;	  
+	  
+	  for(i=0;i<(DateArr.length);i++)
+		  {		  
+				DateArray.push(DateArr[i][0]); 		   	// Array of dates from json file.	  
+		}
+	  var datek;
+		var month;
+		var year;
+		for(i=0;i<DateArray.length;i++)
+		{DateArray[i] = new Date(DateArray[i]);
+			datek = DateArray[i].getDate();
+			month = DateArray[i].getMonth(); //Be careful! January is 0 not 1
+			year = DateArray[i].getFullYear();
+			DateArray[i] = datek + "-" +(month + 1) + "-" + year; 
+			
+		}
+		
+		for(i=0;i<(LangArr.length);i++)
+		  {
+		  if (LangArr[i][0] == 'en') {
+				Eng.push(LangArr[i][0]); }
+		   else if (LangArr[i][0] == 'hi') {
+				Hin.push(LangArr[i][0]);}
+		   else if(LangArr[i][0] == 'pt') {
+				Port.push(LangArr[i][0]);  }		  
+		}
+
+		const InDate = [];
+		const BrazilDate = [];
+		const USADate = [];
+		const InCount = [];
+		const BrazilCount = [];
+		const USACount = [];
+		const SentimentArray=[];
+		//const changedInDate = []
+		for(i=0;i<CountryArr.length;i++)
+		{
+			if (CountryArr[i][0] == 'India') {
+			 InDate.push(DateArray[i]);  }				
+		   else if (CountryArr[i][0] == 'USA') {
+				USADate.push(DateArray[i]);}
+		   else if(CountryArr[i][0] == 'Brazil') {
+				BrazilDate.push(DateArray[i]);  }
+		}
+		for(i=0;i<SentimentArr.length;i++)
+		{
+			SentimentArray.push(SentimentArr[i][0]);
+		}
+		
+		const IndiaCount = [];
+		
+		
+		let unique = [...new Set(DateArray)];		
+		unique.sort();	    
+		for(i=0;i<unique.length;i++){
+			if((_.countBy(InDate)[unique[i]] ) == undefined )
+			{
+			InCount[i] = 0  }
+			else {
+			InCount[i] = _.countBy(InDate)[unique[i]]  }
+		}
+		for(i=0;i<unique.length;i++){
+			
+			if((_.countBy(USADate)[unique[i]] ) == undefined)
+			{
+			USACount[i] =0  }
+			else {
+			USACount[i] = _.countBy(USADate)[unique[i]]  }
+		}
+		for(i=0;i<unique.length;i++){
+			if((_.countBy(BrazilDate)[unique[i]] ) == undefined )
+			{
+			BrazilCount[i] =0  }
+			else { 
+			BrazilCount[i] = _.countBy(BrazilDate)[unique[i]]  }
+		}
+		
+	   var Langdict = {'English': Eng.length, 'Hindi': Hin.length, 'Portugese': Port.length };
+	  
+	  DateArray.sort();
+	  
+	  var Combined = new Array();
+Combined[0] = ['DateArray', 'India', 'USA','Brazil'];
+for (var i = 0; i < unique.length; i++){
+  Combined[i + 1] = [ unique[i], InCount[i], USACount[i] ,BrazilCount[i]];
+}
+//second parameter is false because first row is headers, not data.
+
+      return (<div> 
+	  <Chart   //LANG PIE CHART
+  width={'800px'}
+  height={'400px'}
+  chartType="PieChart"
+  loader={<div>Loading Chart</div>}
+  		
+  data={[
+    ['Language', 'Count'],
+    ['English', Eng.length],
+    ['Hindi', Hin.length],
+    ['Portugese', Port.length],
+    
+  ]}
+  options={{
+    title: 'Distribution of tweets among languages',
+    sliceVisibilityThreshold: 0, 
+  }}
+  rootProps={{ 'data-testid': '7' }}
+/> 
+  <Chart   //SENTIMENT PIE CHART
+  width={'800px'}
+  height={'400px'}
+  chartType="PieChart"
+  loader={<div>Loading Chart</div>}
+  data={[
+    ['Sentiment', 'Count'],
+    ['Positive', _.countBy(SentimentArray)['positive']],
+    ['Neutral', _.countBy(SentimentArray)['neutral']],
+    ['Negative', _.countBy(SentimentArray)['negative']],
+    
+  ]}
+  options={{
+    title: 'Distribution of tweets among Sentiments',
+    sliceVisibilityThreshold: 0, // 
+  }}
+  rootProps={{ 'data-testid': '7' }}
+/> 
+
+ <p>Distribution of tweets across the World</p>
+
+
+<Chart  // COUNTRY GEO CHART
+  width={'600px'}
+  height={'300px'}
+  title= { 'Distribution of tweets across the World' }
+  chartType="GeoChart"
+  data={[
+      ['Country', 'Count'],
+    ['India', InDate.length],
+    ['United States', USADate.length],
+    ['Brazil', BrazilDate.length],
+  ]}
+ 
+  options={{
+	  
+    colorAxis: { colors: ['#00853f', 'black', '#e31b23'] }
+    
+  }} 
+    // Note: you will need to get a mapsApiKey for your project.
+  // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+  mapsApiKey="AIzaSyD95TGYrRBP0eUty1QxTlLsjpCrtjLKydo"
+  rootProps={{ 'data-testid': '1' }}
+/>
+
+{'                             '}  
+
+		
+
+
+<Chart
+
+  width={'100%'}
+  height={'500'}
+  var table = {`google.visualization.arrayToDataTable(Combined, false);`}
+  chartType="Line"
+  loader={<div>Loading Chart</div>}
+  data={ Combined }
+  options={{
+    chart: {
+      title:
+        'Time Series of tweets among different Countries',
+    },
+    width: 900,
+    height: 500,
+    /* series: {
+      // Gives each series an axis name that matches the Y-axis below.
+      0: { axis: 'Temps' },
+      1: { axis: 'Daylight' },
+    }, */
+    axes: {
+      // Adds labels to each axis; they don't have to match the axis names.
+      y: {
+        Count: { label: 'Count' },
+        
+      },
+    },
+  }}
+  rootProps={{ 'data-testid': '4' }}
+/>
+
+
+
+
+
+
+</div>
+		);
 
     }
     onCheck(isChecked, field, value) {
@@ -288,7 +498,6 @@ export default class App extends React.Component {
               }</div></div>}
               </Tab>
               <Tab label="Analytics" value="graph">
-              <p>New Graph</p>
               <div id="graph"></div>
               {(this.state.searchClicked && this.state.data) && this.getGraph()}
               </Tab>
