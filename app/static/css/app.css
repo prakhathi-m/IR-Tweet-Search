@@ -72,6 +72,9 @@ ul.pagination {
     border: 1px solid #1c37da;
     padding: 5px;
 }
+.pagination li.disabled, .pagination li.disabled a {
+  cursor: not-allowed;
+}
 main {
   margin-left: 250px;
 }

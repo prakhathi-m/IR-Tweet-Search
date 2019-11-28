@@ -50,14 +50,6 @@ export default class App extends React.Component {
         prevState.sort !== sort || prevState.dir !== dir || prevState.sentiment !== sentiment) {
         this.onSearch();
       }
-      if(prevProps.currentPage !== currentPage) {
-            if(currentPage - startPage > 6 ) {
-              this.setState({startPage: currentPage, finishPage: currentPage + 10});
-            } else if (currentPage - startPage <=2 && currentPage > 6) {
-              this.setState({startPage: currentPage - 4, finishPage: currentPage + 6});
-            }
-        }
-        const dt = _.slice(data, (currentPage-1)*10 +1, currentPage*10 +1);
     }
     handleApply(evt, picker) {
       let { startDate, endDate } = picker;
@@ -77,10 +69,9 @@ export default class App extends React.Component {
     showTweets(tweet) {
       const sentiment = (tweet['sentiment'] == 'positive') ? 'smile' : (tweet['sentiment'] == 'negative') ? 'frown' : 'meh';
       const color = (tweet['sentiment'] == 'positive') ? '#3fd63f' : (tweet['sentiment'] == 'negative') ? 'red' : 'orange';
-      console.log(tweet["tweet_date"], moment(tweet["tweet_date"]).format('LL'));
       return (
         <Well bsSize="large">
-          <label>{moment(tweet["tweet_date"]).format('MMM DD, YYYY')} - {tweet['tweet_text']}</label>
+          <label>{moment(_.split(tweet["tweet_date"], 'T')[0]).format('MMM DD, YYYY')} - {tweet['tweet_text']}</label>
           <label className="footer">
             <span><FontAwesomeIcon icon={["fas", "user"]} style={{ color: baseColor }}/> {tweet["name"]}, {tweet["country"]} { tweet["verified"] && <FontAwesomeIcon icon={["fas", "check-circle"]} style={{ color: baseColor }}/> } </span>
             <span>
@@ -103,7 +94,6 @@ export default class App extends React.Component {
       }
       if(!_.isEmpty(queryTerm)) {
         const params = {queryTerm: queryTerm, country: country, lang: language, date: arr, sentiment: sentiment, ...(verified && {verified: true}), ...(!_.isEmpty(sort) && {sort: sort, dir: dir})};
-        console.log(params);
         fetch('http://127.0.0.1:5000/search', {
           method: 'POST',
           body: JSON.stringify(params)
@@ -111,8 +101,9 @@ export default class App extends React.Component {
           .then(response => response.json())
           .then(data => {
             this.setState({ data: data, searchClicked: true });
-            if(_.size(data) > 0) {
-              this.setState({currentData: _.slice(data, 1, 11), currentPage:1, startPage: 1, finishPage: 10});
+            const len = _.size(data);
+            if(len > 0) {
+              this.setState({currentData: _.slice(data, 0, 11), currentPage:1, startPage: 1, finishPage: Math.floor(len/10)});
             }
           });
       }
@@ -124,7 +115,6 @@ export default class App extends React.Component {
         dt = _.slice(data, (number-1)*10 +1, number*10 +1);
       }
       this.setState({currentPage: number, currentData: dt});
-      console.log(number, startPage, finishPage, dt);
     }
     getPagination() {
       const {currentPage, startPage, finishPage, data} = this.state;
@@ -285,13 +275,15 @@ export default class App extends React.Component {
                 </div>
               </label>
               <div>{!_.isEmpty(this.state.data) && <div>{this.getData()}
+              {this.state.data.length > 10 &&
               <div className="text-center">
                 <Pagination>
-                  <Pagination.First onClick={() => this.onPageClick(this.state.currentPage - 1)}/>
+                  {this.state.currentPage != this.state.startPage && <Pagination.First onClick={() => this.onPageClick(this.state.currentPage - 1)}/>}
                   {this.getPagination()}
-                  <Pagination.Last onClick={() => this.onPageClick(this.state.currentPage + 1)}/>
+                  {this.state.currentPage != this.state.finishPage && <Pagination.Last onClick={() => this.onPageClick(this.state.currentPage + 1)}/>}
                 </Pagination>
                 </div>
+              }
                 </div>
               }</div></div>}
               </Tab>
