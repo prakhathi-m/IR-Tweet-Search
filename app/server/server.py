@@ -79,8 +79,9 @@ def doSearch(search,lang,country,date,verified,sor,dir,sentiment):
 	inurl='http://ec2-3-86-177-141.compute-1.amazonaws.com:8984/solr/IRF19P4/select?'+filter+'&q='+search_query+s+'&wt=json&indent=true&rows=100'
 	print(inurl)
 	data = urllib.request.urlopen(inurl)
+	count=json.load(data)['response']['numFound']
 	docs = json.load(data)['response']['docs']
-	return docs
+	return [docs,count]
 
 @app.route('/')
 def index():
