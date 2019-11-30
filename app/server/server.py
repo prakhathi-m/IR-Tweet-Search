@@ -9,6 +9,34 @@ from googletrans import Translator
 app = Flask(__name__, static_folder="../static/dist", template_folder="../static")
 
 docs=[]
+def getReplies(id):
+	search_query= "*:*"
+	filter="&fq=replied_to_tweet_id:"+id
+	inurl='http://ec2-3-86-177-141.compute-1.amazonaws.com:8984/solr/IRF19P4/select?'+filter+'&q='+search_query+'&wt=json&indent=true&rows=100'
+	print(inurl)
+	data1 = urllib.request.urlopen(inurl)
+	data2 = urllib.request.urlopen(inurl)
+
+	count=0
+
+	count=json.load(data1)['response']['numFound']
+	docs = json.load(data2)['response']['docs']
+	pos=0
+	neg=0
+	ntr=0
+	for reply in docs:
+		if reply['sentiment']=="positive":
+			pos+=1
+		elif reply['sentiment']=="negative":
+			neg+=1
+		else:
+			ntr+=1
+	print(pos,neg,ntr)
+	return [docs,count]
+
+
+
+
 def doSearch(search,lang,country,date,verified,sor,dir,sentiment):
 	global docs
 	translator = Translator()
@@ -115,6 +143,15 @@ def search():
 		sentiment=c.get('sentiment')
 		result = doSearch(queryTerm,lang,country,date,verified,sort,dir,sentiment)
 		return json.dumps(result)
+@app.route('/reply', methods=['POST'])
+def reply():
+	if request.method == 'POST':
+		a = request.data
+		b= a.decode('utf-8')
+		c = json.loads(b)
+		id = c.get('id')
 
+		result = getReplies(id)
+		return json.dumps(result)
 if __name__ == '__main__':
 	app.run()
