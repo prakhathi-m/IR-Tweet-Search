@@ -107,7 +107,7 @@ export default class App extends React.Component {
           .then(data => {
 			      console.log(data[0], _.slice(data[0], 0, 10));
             this.setState({ data: data[0], searchClicked: true });
-            const len = _.size(data);
+            const len = _.size(data[0]);
             if(len > 0) {
               this.setState({currentData: _.slice(data[0], 0, 10), currentPage:1, startPage: 1, finishPage: Math.floor(len/10)});
             }

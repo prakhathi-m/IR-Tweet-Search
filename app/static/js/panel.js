@@ -23,7 +23,6 @@ export default class Panel extends React.Component {
     }
 
     handleExpandChange(expanded) {
-      console.log(expanded, this.state);
       this.setState({expanded: expanded });
       if(!_.isEmpty(this.state.tweetId) && _.isEmpty(this.state.data)) {
         fetch('http://127.0.0.1:5000/reply', {
@@ -36,7 +35,6 @@ export default class Panel extends React.Component {
     }
 
     getData(data) {
-      console.log(data);
       return _.map(data, (obj, ind) => this.showTweets(obj, ind));
     }
 
@@ -62,7 +60,6 @@ export default class Panel extends React.Component {
 
     render () {
         let { data } = this.state;
-
         return (
           <Card containerStyle={{background: '#fefefe', margin: '10 0 0'}} onExpandChange={this.handleExpandChange} expanded={this.state.expanded}>
              <CardHeader
