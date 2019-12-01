@@ -10,7 +10,7 @@ app = Flask(__name__, static_folder="../static/dist", template_folder="../static
 
 docs=[]
 def getReplies(id):
-	search_query= "*:*"
+	search_query= urllib.parse.quote("*:*")
 	filter="&fq=replied_to_tweet_id:"+id
 	inurl='http://ec2-3-86-177-141.compute-1.amazonaws.com:8984/solr/IRF19P4/select?'+filter+'&q='+search_query+'&wt=json&indent=true&rows=100'
 	print(inurl)
@@ -32,7 +32,11 @@ def getReplies(id):
 		else:
 			ntr+=1
 	print(pos,neg,ntr)
-	return [docs,count]
+	if count>0:
+		pos /= count
+		neg /= count
+		ntr /= count
+	return [docs,count,pos,neg,ntr]
 
 
 
