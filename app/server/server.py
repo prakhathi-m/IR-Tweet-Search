@@ -12,27 +12,59 @@ newsapi = NewsApiClient(api_key='da5b8ff84dab4491b1d1fc0e729d9d38')
 app = Flask(__name__, static_folder="../static/dist", template_folder="../static")
 
 docs=[]
-def getArticle(text,country):
+def getArticle(search):
+	translator = Translator()
+	hi = search
+	en = search
+	pt = search
+
+	tweet_lang = translator.detect(search).lang
+	if tweet_lang == 'en':
+		try:
+			pt = translator.translate(search, dest='pt').text
+		except:
+			pt = search
+		try:
+			hi = translator.translate(search, dest='hi').text
+		except:
+			hi = search
+	elif tweet_lang == 'pt':
+		try:
+			en = translator.translate(search, dest='en').text
+		except:
+			en = search
+		try:
+			hi = translator.translate(search, dest='hi').text
+		except:
+			hi = search
+	elif tweet_lang == 'hi':
+		try:
+			en = translator.translate(search, dest='en').text
+		except:
+			en = search
+		try:
+			pt = translator.translate(search, dest='pt').text
+		except:
+			pt = search
+
+
 	pt_source='globo,blasting-news-br,google-news-br,info-money'
 	en_source='cnn,the-wall-street-journal,cbs-news,techradar,usa-today,buzzfeed'
 	hi_source='the-hindu,the-times-of-india,google-news-in'
-	if country=='USA':
-		source=en_source
-	elif country=='India':
-		source=hi_source
-	else:
-		source=pt_source
 
-	articles = newsapi.get_everything(q=text,sources=source,from_param='2019-11-02',sort_by='relevancy')
+	en_articles = newsapi.get_everything(q=en,sources=en_source,from_param='2019-11-02',sort_by='relevancy')
+	pt_articles = newsapi.get_everything(q=pt,sources=pt_source,from_param='2019-11-02',sort_by='relevancy')
+	hi_articles = newsapi.get_everything(q=hi,sources=hi_source,from_param='2019-11-02',sort_by='relevancy')
+
 	res=[]
-	i=0
-	for a in articles['articles']:
-		if i<5:
-			break
-		i+=1
+	for a in en_articles['articles']:
 		res.append([a['title'], a['url']])
-
+	for a in pt_articles['articles']:
+		res.append([a['title'], a['url']])
+	for a in hi_articles['articles']:
+		res.append([a['title'], a['url']])
 	return res
+
 def getReplies(id):
 	search_query= urllib.parse.quote("*:*")
 	filter="&fq=replied_to_tweet_id:"+id
@@ -189,10 +221,8 @@ def article():
 		a = request.data
 		b= a.decode('utf-8')
 		c = json.loads(b)
-		text = c.get('text')
-		country = c.get('country')
-
-		result = getArticle(text,country)
+		queryTerm = c.get('queryTerm')
+		result = getArticle(queryTerm)
 		return json.dumps(result)
 if __name__ == '__main__':
 	app.run()
