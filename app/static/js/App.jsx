@@ -156,7 +156,7 @@ export default class App extends React.Component {
       const object = this.state.currentData;
       return _.map(object, (obj) => this.showTweets(obj));
     }
-    getGraph() {
+ getGraph() {
 		const data = this.state.data;
 		console.log(data);
       const arr = _.map(data, (d) => d['retweet_count'] );
@@ -175,7 +175,7 @@ export default class App extends React.Component {
 	  const Entertainment = [];
 	  const Religion = [];
 	  const Crime = [];
-	  const Disaster = [];
+	  const Disaster = [];	  
 	  const DateArray = [];
 	  var Engdict = {};
 	  var i = 0;
@@ -310,6 +310,25 @@ for (var i = 0; i < unique.length; i++){
   }}
   rootProps={{ 'data-testid': '7' }}
 />
+<Chart   //GLOBAL LANG PIE CHART
+  width='800'
+  height='400'
+  chartType="PieChart"
+  loader={<div>Loading Chart</div>}
+
+  data={[
+    ['Language', 'Count'],
+    ['English', 6869],
+    ['Hindi', 1933],
+    ['Portugese', 6968],
+
+  ]}
+  options={{
+    title: 'Distribution of all tweets among languages',
+    sliceVisibilityThreshold: 0,
+  }}
+  rootProps={{ 'data-testid': '7' }}
+/>
   <Chart   //SENTIMENT PIE CHART
   width='800'
   height='400'
@@ -328,6 +347,24 @@ for (var i = 0; i < unique.length; i++){
   }}
   rootProps={{ 'data-testid': '7' }}
 />
+ <Chart   //GLOBAL SENTIMENT PIE CHART
+  width='800'
+  height='400'
+  chartType="PieChart"
+  loader={<div>Loading Chart</div>}
+  data={[
+    ['Sentiment', 'Count'],
+    ['Positive', 5843],
+    ['Neutral', 5707],
+    ['Negative', 5736],
+
+  ]}
+  options={{
+    title: 'Distribution of all tweets among Sentiments',
+    sliceVisibilityThreshold: 0, //
+  }}
+  rootProps={{ 'data-testid': '7' }}
+/>
 
  <p>Distribution of tweets across the World</p>
 
@@ -342,6 +379,28 @@ for (var i = 0; i < unique.length; i++){
     ['India', InDate.length],
     ['United States', USADate.length],
     ['Brazil', BrazilDate.length],
+  ]}
+
+  options={{
+
+    colorAxis: { colors: ['#00853f', 'black', '#e31b23'] }
+
+  }}
+    // Note: you will need to get a mapsApiKey for your project.
+  // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+  mapsApiKey="AIzaSyD95TGYrRBP0eUty1QxTlLsjpCrtjLKydo"
+  rootProps={{ 'data-testid': '1' }}
+/>
+<Chart  // GLOBAL COUNTRY GEO CHART
+  width='600'
+  height='300'
+  title= { 'Distribution of tweets across the World' }
+  chartType="GeoChart"
+  data={[
+      ['Country', 'Count'],
+    ['India', 5935],
+    ['United States', 3791],
+    ['Brazil', 7560],
   ]}
 
   options={{
@@ -379,7 +438,7 @@ for (var i = 0; i < unique.length; i++){
   rootProps={{ 'data-testid': '4' }}
 />
 <Chart
-  width={'500px'}
+  width={'500px'} 
   height={'300px'}
   chartType="Bar"
   loader={<div>Loading Chart</div>}
@@ -387,12 +446,33 @@ for (var i = 0; i < unique.length; i++){
     ['Country', 'Politics', 'Crime', 'Entertainment','Disaster', 'Religion'],
     ['India',  _.countBy(InTop)['Politics'],  _.countBy(InTop)['Crime'],  _.countBy(InTop)['Entertainment'], _.countBy(InTop)['Disaster'], _.countBy(InTop)['Religion']],
     ['Unites States',  _.countBy(USATop)['Politics'],  _.countBy(USATop)['Crime'],  _.countBy(USATop)['Entertainment'], _.countBy(USATop)['Disaster'], _.countBy(USATop)['Religion']],
-    ['Brazil',  _.countBy(BrazilTop)['Politics'],  _.countBy(BrazilTop)['Crime'],  _.countBy(BrazilTop)['Entertainment'], _.countBy(BrazilTop)['Disaster'], _.countBy(BrazilTop)['Religion']],
+    ['Brazil',  _.countBy(BrazilTop)['Politics'],  _.countBy(BrazilTop)['Crime'],  _.countBy(BrazilTop)['Entertainment'], _.countBy(BrazilTop)['Disaster'], _.countBy(BrazilTop)['Religion']],    
   ]}
   options={{
-
+    
     chart: {
       title: 'Distribution of tweet topics among Countries',
+      //subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+    },
+  }}
+  // For tests
+  rootProps={{ 'data-testid': '2' }}
+/>
+<Chart
+  width={'500px'} 
+  height={'300px'}
+  chartType="Bar"
+  loader={<div>Loading Chart</div>}
+  data={[
+    ['Country', 'Politics', 'Crime', 'Entertainment','Disaster', 'Religion'],
+    ['India',  1346,  450,  385, 56,476],
+    ['Unites States',  1853, 727, 329, 123,258],
+    ['Brazil', 1668,  209, 200, 206, 196],    
+  ]}
+  options={{
+    
+    chart: {
+      title: 'Distribution of all tweet topics among Countries',
       //subtitle: 'Sales, Expenses, and Profit: 2014-2017',
     },
   }}
