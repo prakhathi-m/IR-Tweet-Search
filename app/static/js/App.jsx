@@ -379,7 +379,7 @@ for (var i = 0; i < unique.length; i++){
   rootProps={{ 'data-testid': '4' }}
 />
 <Chart
-  width={'500px'}
+  width={'500px'} 
   height={'300px'}
   chartType="Bar"
   loader={<div>Loading Chart</div>}
