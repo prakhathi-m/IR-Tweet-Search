@@ -6,9 +6,33 @@ from flask import Flask, render_template, request, jsonify, Response
 import random
 import json
 from googletrans import Translator
+from newsapi import NewsApiClient
+
+newsapi = NewsApiClient(api_key='da5b8ff84dab4491b1d1fc0e729d9d38')
 app = Flask(__name__, static_folder="../static/dist", template_folder="../static")
 
 docs=[]
+def getArticle(text,country):
+	pt_source='globo,blasting-news-br,google-news-br,info-money'
+	en_source='cnn,the-wall-street-journal,cbs-news,techradar,usa-today,buzzfeed'
+	hi_source='the-hindu,the-times-of-india,google-news-in'
+	if country=='USA':
+		source=en_source
+	elif country=='India':
+		source=hi_source
+	else:
+		source=pt_source
+
+	articles = newsapi.get_everything(q=text,sources=source,from_param='2019-11-02',sort_by='relevancy')
+	res=[]
+	i=0
+	for a in articles['articles']:
+		if i<5:
+			break
+		i+=1
+		res.append([a['title'], a['url']])
+
+	return res
 def getReplies(id):
 	search_query= urllib.parse.quote("*:*")
 	filter="&fq=replied_to_tweet_id:"+id
@@ -157,6 +181,16 @@ def reply():
 		id = c.get('id')
 
 		result = getReplies(id)
+		return json.dumps(result)
+def article():
+	if request.method == 'POST':
+		a = request.data
+		b= a.decode('utf-8')
+		c = json.loads(b)
+		text = c.get('text')
+
+
+		result = getArticle(text)
 		return json.dumps(result)
 if __name__ == '__main__':
 	app.run()
