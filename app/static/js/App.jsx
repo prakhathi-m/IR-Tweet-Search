@@ -158,15 +158,24 @@ export default class App extends React.Component {
     }
     getGraph() {
 		const data = this.state.data;
+		console.log(data);
       const arr = _.map(data, (d) => d['retweet_count'] );
       const arr1 =  _.map(data, (d) => d['like_count'] );
 	  const CountryArr = _.map(data, (d) => d['country'] );
 	  const DateArr = _.map(data, (d) => d['tweet_date'] );
 	  const SentimentArr = _.map(data, (d) => d['sentiment'] );
 	  const LangArr = _.map(data, (d) => d['tweet_lang'] );
+	  const TopicArr = _.map(data, (d) => d['topic'] );
+	  console.log(TopicArr);
 	  const Eng = [];
 	  const Hin = [];
 	  const Port = [];
+	  const NA = [];
+	  const Politics = [];
+	  const Entertainment = [];
+	  const Religion = [];
+	  const Crime = [];
+	  const Disaster = [];	  
 	  const DateArray = [];
 	  var Engdict = {};
 	  var i = 0;
@@ -194,12 +203,30 @@ export default class App extends React.Component {
 		   else if(LangArr[i][0] == 'pt') {
 				Port.push(LangArr[i][0]);  }
 		}
+		for(i=0;i<(TopicArr.length);i++)
+		  {
+		  if (TopicArr[i][0] == 'Politics') {
+				Politics.push(LangArr[i][0]); }
+		   else if (TopicArr[i][0] == 'Entertainment') {
+				Entertainment.push(LangArr[i][0]);}
+		   else if(TopicArr[i][0] == 'Religion') {
+				Religion.push(LangArr[i][0]);  }
+		   else if (TopicArr[i][0] == 'Crime') {
+				Crime.push(LangArr[i][0]);}
+		   else if(TopicArr[i][0] == 'Disaster') {
+				Disaster.push(LangArr[i][0]);  }
+		   else if (TopicArr[i][0] == 'NA') {
+				NA.push(LangArr[i][0]); }
+		}
 		const InDate = [];
 		const BrazilDate = [];
 		const USADate = [];
 		const InCount = [];
 		const BrazilCount = [];
 		const USACount = [];
+		const InTop = [];
+		const BrazilTop = [];
+		const USATop = [];
 		const SentimentArray=[];
 		//const changedInDate = []
 		for(i=0;i<CountryArr.length;i++)
@@ -210,6 +237,15 @@ export default class App extends React.Component {
 				USADate.push(DateArray[i]);}
 		   else if(CountryArr[i][0] == 'Brazil') {
 				BrazilDate.push(DateArray[i]);  }
+		}
+		for(i=0;i<TopicArr.length;i++)
+		{
+			if (CountryArr[i][0] == 'India') {
+			 InTop.push(TopicArr[i][0]);  }
+		   else if (CountryArr[i][0] == 'USA') {
+				USATop.push(TopicArr[i][0]);}
+		   else if(CountryArr[i][0] == 'Brazil') {
+				BrazilTop.push(TopicArr[i][0]);  }
 		}
 		for(i=0;i<SentimentArr.length;i++)
 		{
@@ -341,6 +377,27 @@ for (var i = 0; i < unique.length; i++){
     },
   }}
   rootProps={{ 'data-testid': '4' }}
+/>
+<Chart
+  width={'500px'}
+  height={'300px'}
+  chartType="Bar"
+  loader={<div>Loading Chart</div>}
+  data={[
+    ['Country', 'Politics', 'Crime', 'Entertainment','Disaster', 'Religion'],
+    ['India',  _.countBy(InTop)['Politics'],  _.countBy(InTop)['Crime'],  _.countBy(InTop)['Entertainment'], _.countBy(InTop)['Disaster'], _.countBy(InTop)['Religion']],
+    ['Unites States',  _.countBy(USATop)['Politics'],  _.countBy(USATop)['Crime'],  _.countBy(USATop)['Entertainment'], _.countBy(USATop)['Disaster'], _.countBy(USATop)['Religion']],
+    ['Brazil',  _.countBy(BrazilTop)['Politics'],  _.countBy(BrazilTop)['Crime'],  _.countBy(BrazilTop)['Entertainment'], _.countBy(BrazilTop)['Disaster'], _.countBy(BrazilTop)['Religion']],    
+  ]}
+  options={{
+    
+    chart: {
+      title: 'Distribution of tweet topics among Countries',
+      //subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+    },
+  }}
+  // For tests
+  rootProps={{ 'data-testid': '2' }}
 />
 </div>
 		);
