@@ -13,6 +13,7 @@ import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
 import Chart from 'react-google-charts';
 import Panel from './panel.js';
 
+import HeaderLogoImage from '../images/Bits-and-Bytes-Logo.png';
 export default class App extends React.Component {
     constructor(props) {
         super(props);
@@ -36,6 +37,7 @@ export default class App extends React.Component {
           startPage: 1,
           finishPage: 10,
           currentData: [],
+          resetReplies: false,
         };
         this.handleApply = this.handleApply.bind(this);
         this.onSearch = this.onSearch.bind(this);
@@ -44,6 +46,8 @@ export default class App extends React.Component {
         this.getGraph = this.getGraph.bind(this);
         this.getPagination = this.getPagination.bind(this);
         this.onPageClick = this.onPageClick.bind(this);
+        this.showTweets = this.showTweets.bind(this);
+
     }
     componentDidUpdate(prevProps, prevState)  {
       const { country, language, verified, date, sort, dir, sentiment, currentPage, startPage, data } = this.state;
@@ -74,7 +78,7 @@ export default class App extends React.Component {
         <Well bsSize="large" key={index}>
           <label>{moment(_.split(tweet["tweet_date"], 'T')[0]).format('MMM DD, YYYY')} - {tweet['tweet_text']}</label>
           <label className="footer">
-            <span><FontAwesomeIcon icon={["fas", "user"]} style={{ color: baseColor }}/> {tweet["name"]}, {tweet["country"]} { tweet["verified"] && <FontAwesomeIcon icon={["fas", "check-circle"]} style={{ color: baseColor }}/> } </span>
+            <span><FontAwesomeIcon icon={["fas", "user"]} style={{ color: baseColor }}/> {tweet["name"]}, {tweet["country"]} { tweet["verified"][0] && <FontAwesomeIcon icon={["fas", "check-circle"]} style={{ color: baseColor }}/> } </span>
             <span>
             <a href={'https://'+tweet['link']} target="_blank">View Tweet</a>
              <span><FontAwesomeIcon icon={["fas", "retweet"]} style={{ color: baseColor }}/> </span>
@@ -83,7 +87,7 @@ export default class App extends React.Component {
              {tweet["like_count"]} <FontAwesomeIcon icon={["fas", sentiment]} size="2x" style={{ color: color }}/>
              </span>
            </label>
-           <Panel tweetId={tweet['id']} />
+           <Panel tweetId={tweet['id']} resetReplies={this.state.resetReplies}/>
         </Well>
       )
     }
@@ -120,7 +124,7 @@ export default class App extends React.Component {
       if (number > 1) {
         dt = _.slice(data, (number-1)*10 +1, number*10 +1);
       }
-      this.setState({currentPage: number, currentData: dt});
+      this.setState({currentPage: number, currentData: dt, resetReplies: true});
     }
     getPagination() {
       const {currentPage, startPage, finishPage, data} = this.state;
@@ -339,6 +343,10 @@ for (var i = 0; i < unique.length; i++){
         this.setState({ verified: isChecked });
       }
     }
+    getImage() {
+      let headerBg = new Image();
+      headerBg.src = HeaderLogoImage;
+    }
     render () {
       const { startDate, endDate, date } = this.state;
       const locale = {
@@ -439,6 +447,8 @@ for (var i = 0; i < unique.length; i++){
             </Drawer>}
             <main>
             <form onSubmit={this.onSearch}>
+            {this.getImage()}
+            <div className="logo"></div>
             <div className="search-bar">
               <FormControl
                 placeholder="Search"
@@ -456,8 +466,8 @@ for (var i = 0; i < unique.length; i++){
             tabItemContainerStyle={{background: '#fff', color:'black'}} inkBarStyle={{background: baseColor}}
               onChange={(val) => this.setState({activeTab: val})}>
               <Tab label="Search Results" value="search-result" className="search-tab">
-              {!this.state.searchClicked && <p>Enter the query term and search!!! </p>}
-              {(this.state.searchClicked && _.isEmpty(this.state.data)) && <p>No Results Found for {this.state.queryTerm}</p>}
+              {!this.state.searchClicked && <div className="center"><p>Enter the query term and search!!! </p></div>}
+              {(this.state.searchClicked && _.isEmpty(this.state.data)) && <div className="center"><p>No Results Found for {this.state.queryTerm}</p></div>}
               {(this.state.searchClicked && !_.isEmpty(this.state.data)) && <div>
               <label className="space-between"><span>Showing page {this.state.currentPage}. Found {_.size(this.state.data)} Records for <b>{this.state.queryTerm}</b>:</span>
                 <div className="flex sort-bar">
@@ -486,7 +496,8 @@ for (var i = 0; i < unique.length; i++){
               }</div></div>}
               </Tab>
               <Tab label="Analytics" value="graph">
-              <div id="graph"></div>
+              {!this.state.searchClicked && <div className="center"><p>Enter the query term and search!!! </p></div>}
+              {(this.state.searchClicked && _.isEmpty(this.state.data)) && <div className="center"><p>No Results Found for {this.state.queryTerm}</p></div>}
               {(this.state.searchClicked && this.state.data) && this.getGraph()}
               </Tab>
             </Tabs>

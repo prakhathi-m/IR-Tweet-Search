@@ -2,6 +2,26 @@ body {
   font-size: 14px !important;
   font-family: Roboto, sans-serif;
 }
+.center {
+    height: 400px;
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    resize: both;
+    overflow: auto;
+}
+.logo {
+  text-align: center;
+  background-image: url('../images/logo.png');
+  background-repeat: no-repeat;
+  position: absolute;
+  min-height: 55px;
+  width: 145px;
+  margin: -15px 53px;
+}
 ::placeholder {
   font-size: 14px;
 }
