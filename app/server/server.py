@@ -98,7 +98,7 @@ def getReplies(id):
 
 
 
-def doSearch(search,lang,country,date,verified,sor,dir,sentiment):
+def doSearch(search,lang,country,date,verified,sor,dir,sentiment,topic):
 	global docs
 	translator = Translator()
 	hi=search
@@ -153,6 +153,11 @@ def doSearch(search,lang,country,date,verified,sor,dir,sentiment):
 		for val in range(1,len(sentiment)):
 			f_sentiment += "%20OR%20"+"sentiment:"+sentiment[val]
 	f_verified=""
+	f_topic=""
+	if topic is not None and len(topic) > 0:
+		f_topic="&fq=topic:"+topic[0]
+		for val in range(1,len(topic)):
+			f_topic += "%20OR%20"+"topic:"+topic[val]
 	if verified is not None:
 		f_verified="&fq=verified:true"
 	if sor is not None and dir is not None:
@@ -164,7 +169,7 @@ def doSearch(search,lang,country,date,verified,sor,dir,sentiment):
 
 	print(date)
 	search_query= "text_hi:"+ hi + "%20OR%20" + "text_en:" + en+ "%20OR%20" + "text_pt:" + pt
-	filter=f_lang+f_country+f_verified+f_date+f_sentiment
+	filter=f_lang+f_country+f_verified+f_date+f_sentiment+f_topic
 	inurl='http://ec2-3-86-177-141.compute-1.amazonaws.com:8984/solr/IRF19P4/select?'+filter+'&q='+search_query+s+'&wt=json&indent=true&rows=100'
 	print(inurl)
 	data1 = urllib.request.urlopen(inurl)
@@ -202,7 +207,8 @@ def search():
 		sort=c.get('sort')
 		dir=c.get('dir')
 		sentiment=c.get('sentiment')
-		result = doSearch(queryTerm,lang,country,date,verified,sort,dir,sentiment)
+		topic=c.get('topic')
+		result = doSearch(queryTerm,lang,country,date,verified,sort,dir,sentiment, topic)
 		return json.dumps(result)
 @app.route('/reply', methods=['POST'])
 def reply():

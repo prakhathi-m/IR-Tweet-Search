@@ -26,6 +26,7 @@ export default class App extends React.Component {
           data: [],
           country: [],
           language: [],
+          topic: [],
           verified: false,
           date: '',
           dir: 'desc',
@@ -37,6 +38,7 @@ export default class App extends React.Component {
           finishPage: 10,
           currentData: [],
           resetReplies: false,
+          article: [],
         };
         this.handleApply = this.handleApply.bind(this);
         this.onSearch = this.onSearch.bind(this);
@@ -49,10 +51,21 @@ export default class App extends React.Component {
 
     }
     componentDidUpdate(prevProps, prevState)  {
-      const { country, language, verified, date, sort, dir, sentiment, currentPage, startPage, data } = this.state;
+      const { country, language, verified, date, sort, dir, sentiment, queryTerm, activeTab, topic } = this.state;
       if(prevState.country !== country || prevState.language !== language || prevState.verified !== verified || prevState.date !== date ||
-        prevState.sort !== sort || prevState.dir !== dir || prevState.sentiment !== sentiment) {
+        prevState.sort !== sort || prevState.dir !== dir || prevState.sentiment !== sentiment || prevState.topic !== topic) {
         this.onSearch();
+      }
+      if(prevState.activeTab !== activeTab && activeTab == 'article' && !_.isEmpty(queryTerm)) {
+        fetch('http://127.0.0.1:5000/article', {
+          method: 'POST',
+          body: JSON.stringify({queryTerm: queryTerm})
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            this.setState({ article: data });
+          });
       }
     }
     handleApply(evt, picker) {
@@ -86,7 +99,8 @@ export default class App extends React.Component {
              {tweet["like_count"]} <FontAwesomeIcon icon={["fas", sentiment]} size="2x" style={{ color: color }}/>
              </span>
            </label>
-           <Panel tweetId={tweet['id']} resetReplies={this.state.resetReplies} tweetText={tweet["tweet_text"]} url={tweet["tweet_urls.url"]} country={tweet["country"]}/>
+           <label>Topic: {tweet['topic']}</label>
+           <Panel tweetId={tweet['id']} resetReplies={this.state.resetReplies} />
         </Well>
       )
     }
@@ -94,14 +108,15 @@ export default class App extends React.Component {
       if (e) {
         e.preventDefault();
       }
-      const {queryTerm, country, language, date, verified, sort, dir, sentiment } = this.state;
+      const {queryTerm, country, language, date, verified, sort, dir, sentiment, topic } = this.state;
       let arr = [];
       if(!_.isEmpty(date)) {
         let label = _.split(date, '-');
         arr = _.map(label, (dt) => moment(dt).format().slice(0,19)+'Z');
       }
       if(!_.isEmpty(queryTerm)) {
-        const params = {queryTerm: queryTerm, country: country, lang: language, date: arr, sentiment: sentiment, ...(verified && {verified: true}), ...(!_.isEmpty(sort) && {sort: sort, dir: dir})};
+        const params = {queryTerm: queryTerm, country: country, lang: language, date: arr, topic: topic,
+          sentiment: sentiment, ...(verified && {verified: true}), ...(!_.isEmpty(sort) && {sort: sort, dir: dir})};
         fetch('http://127.0.0.1:5000/search', {
           method: 'POST',
           body: JSON.stringify(params)
@@ -338,6 +353,14 @@ for (var i = 0; i < unique.length; i++){
         this.setState({ verified: isChecked });
       }
     }
+    showArticles(article) {
+      return (
+        <div><h6>{article.title}</h6><a url={article.url}>{article.url}</a></div>
+      );
+    }
+    getArticle(object) {
+      return _.map(object, (obj) => this.showArticles(obj));
+    }
     render () {
       const { startDate, endDate, date } = this.state;
       const locale = {
@@ -436,6 +459,33 @@ for (var i = 0; i < unique.length; i++){
                   onCheck={(e, checked) => this.onCheck(checked, 'sentiment', 'negative')}
                 />
                 <hr/>
+                <label>Topic</label>
+                <Checkbox
+                  label="Crime"
+                  iconStyle={{fill: 'white'}}
+                  onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Crime')}
+                />
+                <Checkbox
+                  label="Politics"
+                  onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Politics')}
+                  iconStyle={{fill: 'white'}}
+                />
+                <Checkbox
+                  iconStyle={{fill: 'white'}}
+                  label="Disaster"
+                  onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Disaster')}
+                />
+                <Checkbox
+                  iconStyle={{fill: 'white'}}
+                  label="Entertainment"
+                  onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Entertainment')}
+                />
+                <Checkbox
+                  iconStyle={{fill: 'white'}}
+                  label="Religion"
+                  onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Religion')}
+                />
+                <hr/>
             </Drawer>}
             <main>
             <form onSubmit={this.onSearch}>
@@ -490,6 +540,11 @@ for (var i = 0; i < unique.length; i++){
               {!this.state.searchClicked && <div className="center"><p>Enter the query term and search!!! </p></div>}
               {(this.state.searchClicked && _.isEmpty(this.state.data)) && <div className="center"><p>No Results Found for {this.state.queryTerm}</p></div>}
               {(this.state.searchClicked && this.state.data) && this.getGraph()}
+              </Tab>
+              <Tab label="Articles" value="article">
+              {!this.state.searchClicked && <div className="center"><p>Enter the query term and search!!! </p></div>}
+              {(this.state.searchClicked && _.isEmpty(this.state.data)) && <div className="center"><p>No Results Found for {this.state.queryTerm}</p></div>}
+              {(this.state.searchClicked && this.state.queryTerm && this.state.article) && this.getArticle(this.state.article)}
               </Tab>
             </Tabs>
             </main>

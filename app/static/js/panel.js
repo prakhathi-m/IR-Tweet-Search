@@ -24,7 +24,7 @@ export default class Panel extends React.Component {
           country: props.country,
         };
         this.handleExpandChange = this.handleExpandChange.bind(this);
-        this.handleArticle = this.handleArticle.bind(this);
+        // this.handleArticle = this.handleArticle.bind(this);
     }
     componentWillReceiveProps(newProps) {
       if(this.state.tweetId !== newProps.tweetId) {
@@ -37,7 +37,7 @@ export default class Panel extends React.Component {
 
     handleExpandChange(expanded) {
       this.setState({expanded: expanded });
-      if(!_.isEmpty(this.state.tweetId) && _.isEmpty(this.state.data)) {
+      if(expanded && !_.isEmpty(this.state.tweetId) &&  _.isEmpty(this.state.data)) {
         fetch('http://127.0.0.1:5000/reply', {
           method: 'POST',
           body: JSON.stringify({id: this.state.tweetId})
@@ -46,28 +46,28 @@ export default class Panel extends React.Component {
           .then(data => this.setState({ data: data[0], pos: _.ceil(data[2] * 100, 2), neg: _.ceil(data[3] * 100, 2), neutral: _.ceil(data[4] * 100, 2)}));
       }
     }
-    handleArticle(expanded) {
-      this.setState({subpanelExpanded: expanded });
-      if(!_.isEmpty(this.state.tweetText) && _.isEmpty(this.state.articles)) {
-        fetch('http://127.0.0.1:5000/article', {
-          method: 'POST',
-          body: JSON.stringify({text: this.state.tweetText[0], url : this.state.url, country: this.state.country[0] })
-        })
-          .then(response => response.json())
-          .then(data => this.setState({ data: data }));
-      }
-    }
-    showArticles(article) {
-      return (
-        <div>
-        <p>article.title</p>
-        <a herf={article['title']}>article.title</a>
-        </div>
-      );
-    }
-    getArticles(articles) {
-      return _.map(articles, (obj, ind) => this.showTweets(obj, ind));
-    }
+    // handleArticle(expanded) {
+    //   this.setState({subpanelExpanded: expanded });
+    //   if(!_.isEmpty(this.state.tweetText) && _.isEmpty(this.state.articles)) {
+    //     fetch('http://127.0.0.1:5000/article', {
+    //       method: 'POST',
+    //       body: JSON.stringify({text: this.state.tweetText[0], url : this.state.url, country: this.state.country[0] })
+    //     })
+    //       .then(response => response.json())
+    //       .then(data => this.setState({ data: data }));
+    //   }
+    // }
+    // showArticles(article) {
+    //   return (
+    //     <div>
+    //     <p>article.title</p>
+    //     <a herf={article['title']}>article.title</a>
+    //     </div>
+    //   );
+    // }
+    // getArticles(articles) {
+    //   return _.map(articles, (obj, ind) => this.showTweets(obj, ind));
+    // }
     getData(data) {
       return _.map(data, (obj, ind) => this.showTweets(obj, ind));
     }
@@ -95,7 +95,6 @@ export default class Panel extends React.Component {
     render () {
         let { data, articles } = this.state;
         return (
-          <div>
           <Card containerStyle={{background: '#fefefe', margin: '10 0 0'}} onExpandChange={this.handleExpandChange} expanded={this.state.expanded}>
              <CardHeader
                title="View Replies"
@@ -117,22 +116,21 @@ export default class Panel extends React.Component {
                 : <span>No replies Found</span>}
              </CardText>
            </Card>
-           <Card containerStyle={{background: '#fefefe', margin: '10 0 0'}} onExpandChange={this.handleArticle} expanded={this.state.subpanelExpanded}>
-              <CardHeader
-                title=" News Article"
-                actAsExpander={true}
-                showExpandableButton={false}
-                style={{padding: '8px 5px'}}
-                titleStyle={{color: 'black'}}
-                iconStyle={{color: 'black'}}
-              />
-              <CardText expandable={true} style={{color: 'black'}}>
-              {!_.isEmpty(articles) ?
-                 <div>{this.getData(articles)}</div>
-                 : <span>No Articles Found</span>}
-              </CardText>
-            </Card>
-           </div>
+           // <Card containerStyle={{background: '#fefefe', margin: '10 0 0'}} onExpandChange={this.handleArticle} expanded={this.state.subpanelExpanded}>
+           //    <CardHeader
+           //      title=" News Article"
+           //      actAsExpander={true}
+           //      showExpandableButton={false}
+           //      style={{padding: '8px 5px'}}
+           //      titleStyle={{color: 'black'}}
+           //      iconStyle={{color: 'black'}}
+           //    />
+           //    <CardText expandable={true} style={{color: 'black'}}>
+           //    {!_.isEmpty(articles) ?
+           //       <div>{this.getData(articles)}</div>
+           //       : <span>No Articles Found</span>}
+           //    </CardText>
+           //  </Card>
         );
     }
 }
