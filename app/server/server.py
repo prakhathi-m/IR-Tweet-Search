@@ -25,9 +25,10 @@ def getReplies(id):
 	neg=0
 	ntr=0
 	for reply in docs:
-		if reply['sentiment']=="positive":
+		print(reply['sentiment'])
+		if reply['sentiment'][0]=="positive":
 			pos+=1
-		elif reply['sentiment']=="negative":
+		elif reply['sentiment'][0]=="negative":
 			neg+=1
 		else:
 			ntr+=1
