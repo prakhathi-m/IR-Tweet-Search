@@ -142,7 +142,7 @@ export default class App extends React.Component {
       const object = this.state.currentData;
       return _.map(object, (obj, ind) => this.showTweets(obj, ind));
     }
-    getGraph() {
+        getGraph() {
 		const data = this.state.data;
       const arr = _.map(data, (d) => d['retweet_count'] );
       const arr1 =  _.map(data, (d) => d['like_count'] );
@@ -155,13 +155,13 @@ export default class App extends React.Component {
 	  const Port = [];
 	  const DateArray = [];
 	  var Engdict = {};
-	  var i = 0;
-
+	  var i = 0;	
 	  for(i=0;i<(DateArr.length);i++)
 		  {
-				DateArray.push(DateArr[i][0]); 		   	// Array of dates from json file.
+				DateArray.push(new Date(DateArr[i][0])); 		   	// Array of dates from json file.
 		}
-	  var datek;
+		
+	    var datek;
 		var month;
 		var year;
 		for(i=0;i<DateArray.length;i++)
@@ -169,10 +169,8 @@ export default class App extends React.Component {
 			datek = DateArray[i].getDate();
 			month = DateArray[i].getMonth(); //Be careful! January is 0 not 1
 			year = DateArray[i].getFullYear();
-			DateArray[i] = datek + "-" +(month + 1) + "-" + year;
-
+			DateArray[i] =  (month + 1)+ "-" +datek + "-" + year;
 		}
-
 		for(i=0;i<(LangArr.length);i++)
 		  {
 		  if (LangArr[i][0] == 'en') {
@@ -182,8 +180,7 @@ export default class App extends React.Component {
 		   else if(LangArr[i][0] == 'pt') {
 				Port.push(LangArr[i][0]);  }
 		}
-
-		const InDate = [];
+		const InDate = [];		
 		const BrazilDate = [];
 		const USADate = [];
 		const InCount = [];
@@ -204,10 +201,7 @@ export default class App extends React.Component {
 		{
 			SentimentArray.push(SentimentArr[i][0]);
 		}
-
 		const IndiaCount = [];
-
-
 		let unique = [...new Set(DateArray)];
 		unique.sort();
 		for(i=0;i<unique.length;i++){
@@ -217,8 +211,8 @@ export default class App extends React.Component {
 			else {
 			InCount[i] = _.countBy(InDate)[unique[i]]  }
 		}
+		
 		for(i=0;i<unique.length;i++){
-
 			if((_.countBy(USADate)[unique[i]] ) == undefined)
 			{
 			USACount[i] =0  }
@@ -232,18 +226,20 @@ export default class App extends React.Component {
 			else {
 			BrazilCount[i] = _.countBy(BrazilDate)[unique[i]]  }
 		}
-
 	   var Langdict = {'English': Eng.length, 'Hindi': Hin.length, 'Portugese': Port.length };
-
-	  DateArray.sort();
-
-	  var Combined = new Array();
-Combined[0] = ['DateArray', 'India', 'USA','Brazil'];
+		for(i=0;i<(unique.length);i++)
+		  {
+				unique[i]= 	moment(unique[i]).subtract(10, 'days').calendar() ;	   	// Array of dates from json file.
+		}
+const sortedDates = unique.sort(function(a, b){ 
+      
+                    return new Date(a) - new Date(b); 
+                });
+var Combined = new Array();
+Combined[0] = ['sortedDates', 'India', 'USA','Brazil'];
 for (var i = 0; i < unique.length; i++){
-  Combined[i + 1] = [ unique[i], InCount[i], USACount[i] ,BrazilCount[i]];
+  Combined[i + 1] = [ sortedDates[i], InCount[i], USACount[i] ,BrazilCount[i]];
 }
-//second parameter is false because first row is headers, not data.
-
       return (<div>
 	  <Chart   //LANG PIE CHART
   width='800'
