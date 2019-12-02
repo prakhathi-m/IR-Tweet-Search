@@ -80,6 +80,17 @@ body {
 .daterangepicker .calendar th, .daterangepicker .calendar td {
   padding: 5px;
 }
+.daterangepicker  .btn-success{
+  background: #5866c5;
+  border-color: #5866c5;
+}
+.btn-success:not(:disabled):not(.disabled):active {
+  background-color: #5866c5;
+  border-color: #5866c5;
+}
+.daterangepicker .btn-success:not(:disabled):not(.disabled):focus {
+  box-shadow: 0 0 0 0.2rem rgba(77, 91, 190, 0.5);
+}
 .input-group.filter input {
   width: 180px;
   max-width: 200px;

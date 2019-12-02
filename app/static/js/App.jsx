@@ -13,7 +13,6 @@ import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
 import Chart from 'react-google-charts';
 import Panel from './panel.js';
 
-import HeaderLogoImage from '../images/Bits-and-Bytes-Logo.png';
 export default class App extends React.Component {
     constructor(props) {
         super(props);
@@ -71,11 +70,11 @@ export default class App extends React.Component {
         date: label,
       });
     }
-    showTweets(tweet, index) {
+    showTweets(tweet) {
       const sentiment = (tweet['sentiment'] == 'positive') ? 'smile' : (tweet['sentiment'] == 'negative') ? 'frown' : 'meh';
       const color = (tweet['sentiment'] == 'positive') ? '#3fd63f' : (tweet['sentiment'] == 'negative') ? 'red' : 'orange';
       return (
-        <Well bsSize="large" key={index}>
+        <Well bsSize="large" key={tweet['id']}>
           <label>{moment(_.split(tweet["tweet_date"], 'T')[0]).format('MMM DD, YYYY')} - {tweet['tweet_text']}</label>
           <label className="footer">
             <span><FontAwesomeIcon icon={["fas", "user"]} style={{ color: baseColor }}/> {tweet["name"]}, {tweet["country"]} { tweet["verified"][0] && <FontAwesomeIcon icon={["fas", "check-circle"]} style={{ color: baseColor }}/> } </span>
@@ -87,7 +86,7 @@ export default class App extends React.Component {
              {tweet["like_count"]} <FontAwesomeIcon icon={["fas", sentiment]} size="2x" style={{ color: color }}/>
              </span>
            </label>
-           <Panel tweetId={tweet['id']} resetReplies={this.state.resetReplies}/>
+           <Panel tweetId={tweet['id']} resetReplies={this.state.resetReplies} tweetText={tweet["tweet_text"]} url={tweet["tweet_urls.url"]} country={tweet["country"]}/>
         </Well>
       )
     }
@@ -140,9 +139,9 @@ export default class App extends React.Component {
     }
     getData() {
       const object = this.state.currentData;
-      return _.map(object, (obj, ind) => this.showTweets(obj, ind));
+      return _.map(object, (obj) => this.showTweets(obj));
     }
-        getGraph() {
+    getGraph() {
 		const data = this.state.data;
       const arr = _.map(data, (d) => d['retweet_count'] );
       const arr1 =  _.map(data, (d) => d['like_count'] );
@@ -155,12 +154,12 @@ export default class App extends React.Component {
 	  const Port = [];
 	  const DateArray = [];
 	  var Engdict = {};
-	  var i = 0;	
+	  var i = 0;
 	  for(i=0;i<(DateArr.length);i++)
 		  {
 				DateArray.push(new Date(DateArr[i][0])); 		   	// Array of dates from json file.
 		}
-		
+
 	    var datek;
 		var month;
 		var year;
@@ -180,7 +179,7 @@ export default class App extends React.Component {
 		   else if(LangArr[i][0] == 'pt') {
 				Port.push(LangArr[i][0]);  }
 		}
-		const InDate = [];		
+		const InDate = [];
 		const BrazilDate = [];
 		const USADate = [];
 		const InCount = [];
@@ -211,7 +210,7 @@ export default class App extends React.Component {
 			else {
 			InCount[i] = _.countBy(InDate)[unique[i]]  }
 		}
-		
+
 		for(i=0;i<unique.length;i++){
 			if((_.countBy(USADate)[unique[i]] ) == undefined)
 			{
@@ -231,9 +230,9 @@ export default class App extends React.Component {
 		  {
 				unique[i]= 	moment(unique[i]).subtract(10, 'days').calendar() ;	   	// Array of dates from json file.
 		}
-const sortedDates = unique.sort(function(a, b){ 
-      
-                    return new Date(a) - new Date(b); 
+const sortedDates = unique.sort(function(a, b){
+
+                    return new Date(a) - new Date(b);
                 });
 var Combined = new Array();
 Combined[0] = ['sortedDates', 'India', 'USA','Brazil'];
@@ -339,10 +338,6 @@ for (var i = 0; i < unique.length; i++){
         this.setState({ verified: isChecked });
       }
     }
-    getImage() {
-      let headerBg = new Image();
-      headerBg.src = HeaderLogoImage;
-    }
     render () {
       const { startDate, endDate, date } = this.state;
       const locale = {
@@ -372,7 +367,8 @@ for (var i = 0; i < unique.length; i++){
                    onApply={this.handleApply}
                    locale={locale}
                    autoUpdateInput
-                   autoApply
+                   autoApply={false}
+                   onCancel={() => this.setState({date: ''})}
                 >
                 <div className="input-group filter">
                 <input type="text" className="form-control" value={date} readOnly/>
@@ -443,7 +439,6 @@ for (var i = 0; i < unique.length; i++){
             </Drawer>}
             <main>
             <form onSubmit={this.onSearch}>
-            {this.getImage()}
             <div className="logo"></div>
             <div className="search-bar">
               <FormControl

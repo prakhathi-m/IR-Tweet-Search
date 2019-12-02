@@ -182,15 +182,17 @@ def reply():
 
 		result = getReplies(id)
 		return json.dumps(result)
+
+@app.route('/article', methods=['POST'])
 def article():
 	if request.method == 'POST':
 		a = request.data
 		b= a.decode('utf-8')
 		c = json.loads(b)
 		text = c.get('text')
+		country = c.get('country')
 
-
-		result = getArticle(text)
+		result = getArticle(text,country)
 		return json.dumps(result)
 if __name__ == '__main__':
 	app.run()
