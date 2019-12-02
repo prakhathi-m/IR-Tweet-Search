@@ -137,6 +137,8 @@ input.form-control {
   padding: 5px 0 0;
   align-items: center;
 }
+.article {padding: 10px}
+.article h6 {margin: 0}
 .default.date-range-toggle.btn.btn-default.date-range-toggle {
     color: #333;
     background-color: #fff;

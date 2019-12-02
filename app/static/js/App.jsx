@@ -175,7 +175,7 @@ export default class App extends React.Component {
 	  const Entertainment = [];
 	  const Religion = [];
 	  const Crime = [];
-	  const Disaster = [];	  
+	  const Disaster = [];
 	  const DateArray = [];
 	  var Engdict = {};
 	  var i = 0;
@@ -379,7 +379,7 @@ for (var i = 0; i < unique.length; i++){
   rootProps={{ 'data-testid': '4' }}
 />
 <Chart
-  width={'500px'} 
+  width={'500px'}
   height={'300px'}
   chartType="Bar"
   loader={<div>Loading Chart</div>}
@@ -387,10 +387,10 @@ for (var i = 0; i < unique.length; i++){
     ['Country', 'Politics', 'Crime', 'Entertainment','Disaster', 'Religion'],
     ['India',  _.countBy(InTop)['Politics'],  _.countBy(InTop)['Crime'],  _.countBy(InTop)['Entertainment'], _.countBy(InTop)['Disaster'], _.countBy(InTop)['Religion']],
     ['Unites States',  _.countBy(USATop)['Politics'],  _.countBy(USATop)['Crime'],  _.countBy(USATop)['Entertainment'], _.countBy(USATop)['Disaster'], _.countBy(USATop)['Religion']],
-    ['Brazil',  _.countBy(BrazilTop)['Politics'],  _.countBy(BrazilTop)['Crime'],  _.countBy(BrazilTop)['Entertainment'], _.countBy(BrazilTop)['Disaster'], _.countBy(BrazilTop)['Religion']],    
+    ['Brazil',  _.countBy(BrazilTop)['Politics'],  _.countBy(BrazilTop)['Crime'],  _.countBy(BrazilTop)['Entertainment'], _.countBy(BrazilTop)['Disaster'], _.countBy(BrazilTop)['Religion']],
   ]}
   options={{
-    
+
     chart: {
       title: 'Distribution of tweet topics among Countries',
       //subtitle: 'Sales, Expenses, and Profit: 2014-2017',
@@ -411,9 +411,11 @@ for (var i = 0; i < unique.length; i++){
       }
     }
     showArticles(article) {
+      const title = article[0];
+      const url = article[1];
       return (
-        <div><h6>{article.title}</h6><a url={article.url}>{article.url}</a></div>
-      );
+        <div className="article"><h6>{title}</h6><a href={url} target="_blank">{url}</a></div>
+      ); 
     }
     getArticle(object) {
       return _.map(object, (obj) => this.showArticles(obj));
@@ -601,7 +603,7 @@ for (var i = 0; i < unique.length; i++){
               <Tab label="Articles" value="article">
               {!this.state.searchClicked && <div className="center"><p>Enter the query term and search!!! </p></div>}
               {(this.state.searchClicked && _.isEmpty(this.state.data)) && <div className="center"><p>No Results Found for {this.state.queryTerm}</p></div>}
-              {(this.state.searchClicked && this.state.queryTerm && this.state.article) && this.getArticle(this.state.article)}
+              {(this.state.searchClicked && this.state.queryTerm && this.state.article) && <div style={{padding: '20px 10px'}}>{this.getArticle(this.state.article)}</div>}
               </Tab>
             </Tabs>
             </main>
