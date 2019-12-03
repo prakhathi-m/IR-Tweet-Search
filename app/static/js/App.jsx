@@ -370,7 +370,14 @@ export default class App extends React.Component {
                     label="Religion"
                     onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Religion')}
                     />}
-                /> ]}/>
+                />, <ListItem
+                    key={5}
+                    innerDivStyle={{'padding': '0px', margin: '0', fontSize: '14'}}
+                    primaryText= {<Checkbox
+                    iconStyle={{fill: 'white'}}
+                    label="Politics"
+                    onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Politics')}
+                    />}/> ]}/>
                 </List>
                 <hr/>
             </Drawer>}
