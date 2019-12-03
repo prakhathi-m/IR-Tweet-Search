@@ -197,7 +197,7 @@ export default class App extends React.Component {
     ['MarinaSilva', 574126],
   ]}
   options={{
-    title: 'Retweet Distribution',
+    title: '(GLOBAL DATA) Retweet Distribution',
     // Just add this option
     is3D: true,
   }}
@@ -221,7 +221,7 @@ export default class App extends React.Component {
     ['MarinaSilva',3192856 ],
   ]}
   options={{
-    title: 'Likes Distribution',
+    title: '(GLOBAL DATA) Likes Distribution',
     // Just add this option
     is3D: true,
   }}
