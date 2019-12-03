@@ -118,7 +118,8 @@ export default class App extends React.Component {
          }}
          rootProps={{ 'data-testid': '7' }}
        />
-   </div>);
+
+        </div> );
   }
 
   getGeoGraph(data) {
@@ -175,7 +176,60 @@ export default class App extends React.Component {
         mapsApiKey="AIzaSyD95TGYrRBP0eUty1QxTlLsjpCrtjLKydo"
         rootProps={{ 'data-testid': '1' }}/></div>);
       }
+ getRetLikeGraph(data) {
+    		return (<div className="flex">
+    				<Chart
+  width={'800px'}
+  height={'300px'}
+  chartType="PieChart"
+  loader={<div>Loading Chart</div>}
+  data={[
 
+    ['POI', 'Retweet Count'],
+    ['AOC', 9216583],
+    ['narendramodi', 5702319],
+    ['AmitShah', 2145252],
+    ['ShashiTharoor', 243435],
+    ['BarackObama', 9399500],
+    ['SenSanders',4759616 ],
+    ['dilmabr', 1189527],
+    ['jairbolsonaro', 10958976],
+    ['MarinaSilva', 574126],
+  ]}
+  options={{
+    title: 'Retweet Distribution',
+    // Just add this option
+    is3D: true,
+  }}
+  rootProps={{ 'data-testid': '2' }}
+ /> <Chart
+  width={'800px'}
+  height={'300px'}
+  chartType="PieChart"
+  loader={<div>Loading Chart</div>}
+  data={[
+
+    ['POI', 'Retweet Count'],
+    ['AOC',43438002 ],
+    ['narendramodi', 29602696],
+    ['AmitShah', 11788661],
+    ['ShashiTharoor', 1426707],
+    ['BarackObama', 44009307],
+    ['SenSanders',15942328 ],
+    ['dilmabr',3846213 ],
+    ['jairbolsonaro', 70669214],
+    ['MarinaSilva',3192856 ],
+  ]}
+  options={{
+    title: 'Likes Distribution',
+    // Just add this option
+    is3D: true,
+  }}
+  rootProps={{ 'data-testid': '2' }}
+ />
+
+          </div>);
+  }
   getTopicGraph(data) {
     	  const CountryArr = _.map(data, (d) => d['country'] );
     	  const TopicArr = _.map(data, (d) => d['topic'] );
@@ -363,6 +417,7 @@ for (var i = 0; i < unique.length; i++){
             <option value="geo_dis">Geographical Distribution</option>
             <option value="time_series">Time Series</option>
             <option value="topic_dis">Topic Distribution</option>
+            <option value="popular">Popularity Analysis</option>
           </FormControl>
           </div>
           {graph == 'lang_dis' && this.getLangGraph(data)}
@@ -370,6 +425,7 @@ for (var i = 0; i < unique.length; i++){
           {graph == 'time_series' && this.getTimeGraph(data)}
           {graph == 'geo_dis' && this.getGeoGraph(data)}
           {graph == 'topic_dis' && this.getTopicGraph(data)}
+           {graph == 'popular' && this.getRetLikeGraph()}
           </div>
         );
     }
