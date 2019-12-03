@@ -24,7 +24,6 @@ export default class Panel extends React.Component {
           country: props.country,
         };
         this.handleExpandChange = this.handleExpandChange.bind(this);
-        // this.handleArticle = this.handleArticle.bind(this);
     }
     componentWillReceiveProps(newProps) {
       if(this.state.tweetId !== newProps.tweetId) {
@@ -46,28 +45,6 @@ export default class Panel extends React.Component {
           .then(data => this.setState({ data: data[0], pos: _.ceil(data[2] * 100, 2), neg: _.ceil(data[3] * 100, 2), neutral: _.ceil(data[4] * 100, 2)}));
       }
     }
-    // handleArticle(expanded) {
-    //   this.setState({subpanelExpanded: expanded });
-    //   if(!_.isEmpty(this.state.tweetText) && _.isEmpty(this.state.articles)) {
-    //     fetch('http://127.0.0.1:5000/article', {
-    //       method: 'POST',
-    //       body: JSON.stringify({text: this.state.tweetText[0], url : this.state.url, country: this.state.country[0] })
-    //     })
-    //       .then(response => response.json())
-    //       .then(data => this.setState({ data: data }));
-    //   }
-    // }
-    // showArticles(article) {
-    //   return (
-    //     <div>
-    //     <p>article.title</p>
-    //     <a herf={article['title']}>article.title</a>
-    //     </div>
-    //   );
-    // }
-    // getArticles(articles) {
-    //   return _.map(articles, (obj, ind) => this.showTweets(obj, ind));
-    // }
     getData(data) {
       return _.map(data, (obj, ind) => this.showTweets(obj, ind));
     }
@@ -106,8 +83,7 @@ export default class Panel extends React.Component {
              />
              <CardText expandable={true} style={{color: 'black'}}>
              {!_.isEmpty(data) ?
-
-                <div>
+              <div>
                <div className="text-center">Analytics on Replies -  <FontAwesomeIcon icon={["fas", 'smile']} size="lg" style={{ color: '#3fd63f' }}/>{this.state.pos} {' %  '}
                <FontAwesomeIcon icon={["fas", 'meh']} size="lg" style={{ color: 'orange' }}/> {this.state.neutral} {' %  '}
                 <FontAwesomeIcon icon={["fas", 'frown']} size="lg" style={{ color: 'red' }}/> {this.state.neg}  {' %  '}</div>
@@ -116,21 +92,6 @@ export default class Panel extends React.Component {
                 : <span>No replies Found</span>}
              </CardText>
            </Card>
-           // <Card containerStyle={{background: '#fefefe', margin: '10 0 0'}} onExpandChange={this.handleArticle} expanded={this.state.subpanelExpanded}>
-           //    <CardHeader
-           //      title=" News Article"
-           //      actAsExpander={true}
-           //      showExpandableButton={false}
-           //      style={{padding: '8px 5px'}}
-           //      titleStyle={{color: 'black'}}
-           //      iconStyle={{color: 'black'}}
-           //    />
-           //    <CardText expandable={true} style={{color: 'black'}}>
-           //    {!_.isEmpty(articles) ?
-           //       <div>{this.getData(articles)}</div>
-           //       : <span>No Articles Found</span>}
-           //    </CardText>
-           //  </Card>
         );
     }
 }
