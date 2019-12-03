@@ -52,9 +52,9 @@ def getArticle(search):
 	en_source='cnn,the-wall-street-journal,cbs-news,techradar,usa-today,buzzfeed'
 	hi_source='the-hindu,the-times-of-india,google-news-in'
 
-	en_articles = newsapi.get_everything(q=en,sources=en_source,from_param='2019-11-02',sort_by='relevancy')
-	pt_articles = newsapi.get_everything(q=pt,sources=pt_source,from_param='2019-11-02',sort_by='relevancy')
-	hi_articles = newsapi.get_everything(q=hi,sources=hi_source,from_param='2019-11-02',sort_by='relevancy')
+	en_articles = newsapi.get_everything(q=en,sources=en_source,sort_by='relevancy')
+	pt_articles = newsapi.get_everything(q=pt,sources=pt_source,sort_by='relevancy')
+	hi_articles = newsapi.get_everything(q=hi,sources=hi_source,sort_by='relevancy')
 
 	res=[]
 	for a in en_articles['articles']:
