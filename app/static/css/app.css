@@ -188,3 +188,7 @@ input.form-control {
  .sort-bar .box:first-of-type {
    margin-left: 10px;
  }
+.list button {
+    padding: 0 !important;
+    height: 20px !important;
+}

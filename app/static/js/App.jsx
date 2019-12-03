@@ -5,8 +5,8 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 require('../css/app.css');
 import moment from 'moment';
 import _ from 'lodash';
-import { Row, Col, FormControl, Form, Button, Well, Pagination,  } from "react-bootstrap";
-import { Drawer, Tabs, IconButton, Tab, Checkbox, Card, CardHeader, CardText } from 'material-ui';
+import { FormControl, Form, Button, Well, Pagination,  } from "react-bootstrap";
+import { Drawer, Tabs, IconButton, Tab, Checkbox, Card, CardHeader, CardText, List, ListItem } from 'material-ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 var baseColor = '#5866c5';
 import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
@@ -214,89 +214,164 @@ export default class App extends React.Component {
                   </span>
               </div>
                 </DatetimeRangePicker>
-                <label style={{'margin': '10px 0'}}>Country</label>
-                <Checkbox
-                  label="USA"
-                  iconStyle={{fill: 'white'}}
-                  onCheck={(e, checked) => this.onCheck(checked, 'country', 'USA')}
-                />
-                <Checkbox
-                  label="Brazil"
-                  onCheck={(e, checked) => this.onCheck(checked, 'country', 'Brazil')}
-                  iconStyle={{fill: 'white'}}
-                />
-                <Checkbox
-                  iconStyle={{fill: 'white'}}
-                  onCheck={(e, checked) => this.onCheck(checked, 'country', 'India')}
-                  label="India"
-                />
-                <hr />
-                <label>Language</label>
-                <Checkbox
-                  label="English"
-                  iconStyle={{fill: 'white'}}
-                  onCheck={(e, checked) => this.onCheck(checked, 'language', 'en')}
-                />
-                <Checkbox
-                  label="Hindi"
-                  iconStyle={{fill: 'white'}}
-                  onCheck={(e, checked) => this.onCheck(checked, 'language', 'hi')}
-                />
-                <Checkbox
-                  label="Portugese"
-                  iconStyle={{fill: 'white'}}
-                  onCheck={(e, checked) => this.onCheck(checked, 'language', 'pt')}
-                />
-                <hr/>
+                <List className="list">
                 <Checkbox
                   label="Verified User"
                   iconStyle={{fill: 'white'}}
                   onCheck={(e, checked) => this.onCheck(checked, 'verified')}
                 />
+                <hr style={{'margin': '3px 0 10px'}} />
+                <ListItem
+                 primaryText="Country"
+                 initiallyOpen={true}
+                 primaryTogglesNestedList={true}
+                 innerDivStyle={{'padding': '0px', fontSize: '14'}}
+                 nestedListStyle={{'padding' : '0'}}
+                 className="list"
+                 nestedItems={[
+               <ListItem
+                 key={1}
+                 innerDivStyle={{'padding': '0px', margin: '10px 0 0', fontSize: '14'}}
+                 primaryText={<Checkbox
+                   label="USA"
+                   iconStyle={{fill: 'white'}}
+                   onCheck={(e, checked) => this.onCheck(checked, 'country', 'USA')}
+                />}
+               />,
+             <ListItem
+                    key={2}
+                    innerDivStyle={{'padding': '0px', margin: '0', fontSize: '14'}}
+                    primaryText={<Checkbox
+                      label="Brazil"
+                      onCheck={(e, checked) => this.onCheck(checked, 'country', 'Brazil')}
+                      iconStyle={{fill: 'white'}}
+                />}
+              />,
+             <ListItem
+                  key={3}
+                  innerDivStyle={{'padding': '0px', margin: '0', fontSize: '14'}}
+                  primaryText={<Checkbox
+                    iconStyle={{fill: 'white'}}
+                    onCheck={(e, checked) => this.onCheck(checked, 'country', 'India')}
+                    label="India"
+            />}
+                />]}/>
                 <hr/>
-                <label>Sentiment</label>
-                <Checkbox
-                  label="Positive"
-                  iconStyle={{fill: 'white'}}
-                  onCheck={(e, checked) => this.onCheck(checked, 'sentiment', 'positive')}
-                />
-                <Checkbox
-                  label="Neutral"
-                  onCheck={(e, checked) => this.onCheck(checked, 'sentiment', 'neutral')}
-                  iconStyle={{fill: 'white'}}
-                />
-                <Checkbox
+                <ListItem
+                 primaryText="Language"
+                 initiallyOpen={true}
+                 primaryTogglesNestedList={true}
+                 innerDivStyle={{'padding': '0px', fontSize: '14'}}
+                 nestedListStyle={{'padding' : '0'}}
+                 className="list"
+                 nestedItems={[
+               <ListItem
+                 key={1}
+                 innerDivStyle={{'padding': '0px', margin: '10px 0 0', fontSize: '14'}}
+                 primaryText={<Checkbox
+                   label="English"
+                   iconStyle={{fill: 'white'}}
+                   onCheck={(e, checked) => this.onCheck(checked, 'language', 'en')}
+                />}
+               />,
+             <ListItem
+                    key={2}
+                    innerDivStyle={{'padding': '0px', margin: '0', fontSize: '14'}}
+                    primaryText={<Checkbox
+                      label="Hindi"
+                      iconStyle={{fill: 'white'}}
+                      onCheck={(e, checked) => this.onCheck(checked, 'language', 'hi')}
+                />}
+              />,
+             <ListItem
+                  key={3}
+                  innerDivStyle={{'padding': '0px', margin: '0', fontSize: '14'}}
+                  primaryText={<Checkbox
+                    label="Portugese"
+                    iconStyle={{fill: 'white'}}
+                    onCheck={(e, checked) => this.onCheck(checked, 'language', 'pt')}
+            />}
+                />]}/>
+                <hr/>
+                <ListItem
+                 primaryText="Sentiment"
+                 initiallyOpen={true}
+                 primaryTogglesNestedList={true}
+                 innerDivStyle={{'padding': '0px', fontSize: '14'}}
+                 nestedListStyle={{'padding' : '0'}}
+                 className="list"
+                 nestedItems={[
+               <ListItem
+                 key={1}
+                 innerDivStyle={{'padding': '0px', margin: '10px 0 0', fontSize: '14'}}
+                 primaryText={<Checkbox
+                 label="Positive"
+                 iconStyle={{fill: 'white'}}
+                 onCheck={(e, checked) => this.onCheck(checked, 'sentiment', 'positive')}
+                />}
+               />,
+             <ListItem
+                    key={2}
+                    innerDivStyle={{'padding': '0px', margin: '0', fontSize: '14'}}
+                    primaryText={<Checkbox
+                    label="Neutral"
+                    onCheck={(e, checked) => this.onCheck(checked, 'sentiment', 'neutral')}
+                    iconStyle={{fill: 'white'}}
+                />}
+              />,
+             <ListItem
+                  key={3}
+                  innerDivStyle={{'padding': '0px', margin: '0', fontSize: '14'}}
+                  primaryText={<Checkbox
                   iconStyle={{fill: 'white'}}
                   label="Negative"
                   onCheck={(e, checked) => this.onCheck(checked, 'sentiment', 'negative')}
-                />
+            />}
+                />]}/>
                 <hr/>
-                <label>Topic</label>
-                <Checkbox
-                  label="Crime"
-                  iconStyle={{fill: 'white'}}
-                  onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Crime')}
-                />
-                <Checkbox
-                  label="Politics"
-                  onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Politics')}
-                  iconStyle={{fill: 'white'}}
-                />
-                <Checkbox
-                  iconStyle={{fill: 'white'}}
-                  label="Disaster"
-                  onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Disaster')}
-                />
-                <Checkbox
-                  iconStyle={{fill: 'white'}}
-                  label="Entertainment"
-                  onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Entertainment')}
-                />
-                <Checkbox
-                  iconStyle={{fill: 'white'}}
-                  label="Religion"
-                  onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Religion')}
-                />
+                <ListItem
+             primaryText="Topic"
+             initiallyOpen={true}
+             primaryTogglesNestedList={true}
+             innerDivStyle={{'padding': '0px', fontSize: '14'}}
+             nestedListStyle={{'padding' : '0'}}
+             className="list"
+             nestedItems={[
+               <ListItem
+                 key={1}
+                 innerDivStyle={{'padding': '0px', margin: '10px 0 0', fontSize: '14'}}
+                 primaryText={<Checkbox
+                 label="Crime"
+                 iconStyle={{fill: 'white'}}
+                 onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Crime')}
+                />}
+               />,
+             <ListItem
+                    key={2}
+                    innerDivStyle={{'padding': '0px', margin: '0', fontSize: '14'}}
+                    primaryText={<Checkbox
+                    iconStyle={{fill: 'white'}}
+                    label="Disaster"
+                    onCheck={(e,  checked) => this.onCheck(checked, 'topic', 'Disaster')}
+                    />}
+              />, <ListItem
+                    key={3}
+                    innerDivStyle={{'padding': '0px', margin: '0', fontSize: '14'}}
+                    primaryText={<Checkbox
+                    iconStyle={{fill: 'white'}}
+                    label="Entertainment"
+                    onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Entertainment')}
+                    />}
+                /> , <ListItem
+                    key={4}
+                    innerDivStyle={{'padding': '0px', margin: '0', fontSize: '14'}}
+                    primaryText= {<Checkbox
+                    iconStyle={{fill: 'white'}}
+                    label="Religion"
+                    onCheck={(e, checked) => this.onCheck(checked, 'topic', 'Religion')}
+                    />}
+                /> ]}/>
+                </List>
                 <hr/>
             </Drawer>}
             <main>
