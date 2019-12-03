@@ -51,7 +51,7 @@ export default class App extends React.Component {
             ['Portugese', Port.length],
           ]}
           options={{
-            title: 'Distribution of tweets among languages',
+            title: '(QUERY DATA) Language Distribution',
             sliceVisibilityThreshold: 0,
           }}
           rootProps={{ 'data-testid': '7' }}
@@ -68,7 +68,7 @@ export default class App extends React.Component {
             ['Portugese', 6968],
           ]}
           options={{
-            title: 'Distribution of all tweets among languages',
+            title: '(GLOBAL DATA) Language Distribution',
             sliceVisibilityThreshold: 0,
           }}
           rootProps={{ 'data-testid': '7' }}
@@ -96,7 +96,7 @@ export default class App extends React.Component {
            ['Negative', _.countBy(SentimentArray)['negative']],
          ]}
          options={{
-           title: 'Distribution of tweets among Sentiments',
+           title: '(QUERY DATA) Sentiment Distribution',
            sliceVisibilityThreshold: 0, //
          }}
          rootProps={{ 'data-testid': '7' }}
@@ -113,7 +113,7 @@ export default class App extends React.Component {
            ['Negative', 5736],
          ]}
          options={{
-           title: 'Distribution of all tweets among Sentiments',
+           title: '(GLOBAL DATA) Sentiment Distribution',
            sliceVisibilityThreshold: 0, //
          }}
          rootProps={{ 'data-testid': '7' }}
@@ -128,9 +128,9 @@ export default class App extends React.Component {
       {
         CountryArray.push(CountryArr[i][0]);
       }
-        return (<div>
+        return (<div className="flex">
       <Chart  // COUNTRY GEO CHART
-        width='600'
+        width='500'
         height='300'
         title= { 'Distribution of tweets across the World' }
         chartType="GeoChart"
@@ -140,7 +140,9 @@ export default class App extends React.Component {
           ['United States', _.countBy(CountryArray)['USA']],
           ['Brazil', _.countBy(CountryArray)['Brazil']],
         ]}
+		
         options={{
+			title: '(QUERY DATA) Distribution of tweets among languages',
           colorAxis: { colors: ['#00853f', 'black', '#e31b23'] }
         }}
           // Note: you will need to get a mapsApiKey for your project.
@@ -149,7 +151,7 @@ export default class App extends React.Component {
         rootProps={{ 'data-testid': '1' }}
       />
       <Chart  // GLOBAL COUNTRY GEO CHART
-        width='600'
+        width='500'
         height='300'
         title= { 'Distribution of tweets across the World' }
         chartType="GeoChart"
@@ -159,9 +161,15 @@ export default class App extends React.Component {
           ['United States', 3791],
           ['Brazil', 7560],
         ]}
-        options={{
+		
+       /*  options={{
+			title: '(QUERY DATA) Distribution of tweets among languages',
           colorAxis: { colors: ['#00853f', 'black', '#e31b23'] }
-        }}
+        }} */
+		options={{colorAxis: { colors: ['#00853f', 'black', '#e31b23'] },
+				 chart: {
+                title: '(QUERY DATA) Topic Distribution Among Countries',
+              },             }} 
           // Note: you will need to get a mapsApiKey for your project.
         // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
         mapsApiKey="AIzaSyD95TGYrRBP0eUty1QxTlLsjpCrtjLKydo"
@@ -204,10 +212,11 @@ export default class App extends React.Component {
     		   else if(CountryArr[i][0] == 'Brazil') {
     				BrazilTop.push(TopicArr[i][0]);  }
     		}
-    		return (<div>
+    		return (<div className="flex">
+			
           <Chart
-            width={'500px'}
-            height={'300px'}
+            width='600'
+            height='300'
             chartType="Bar"
             loader={<div>Loading Chart</div>}
             data={[
@@ -216,17 +225,16 @@ export default class App extends React.Component {
               ['Unites States',  _.countBy(USATop)['Politics'],  _.countBy(USATop)['Crime'],  _.countBy(USATop)['Entertainment'], _.countBy(USATop)['Disaster'], _.countBy(USATop)['Religion']],
               ['Brazil',  _.countBy(BrazilTop)['Politics'],  _.countBy(BrazilTop)['Crime'],  _.countBy(BrazilTop)['Entertainment'], _.countBy(BrazilTop)['Disaster'], _.countBy(BrazilTop)['Religion']],
             ]}
-            options={{
-              chart: {
-                title: 'Distribution of tweet topics among Countries',
-              },
-            }}
-            // For tests
+             options={{
+				 chart: {
+                title: '(QUERY DATA) Topic Distribution Among Countries',
+              },             }} 
+			 
             rootProps={{ 'data-testid': '2' }}
-          />
+          /> 
           <Chart
-            width={'500px'}
-            height={'300px'}
+            width='600'
+            height='300'
             chartType="Bar"
             loader={<div>Loading Chart</div>}
             data={[
@@ -236,9 +244,9 @@ export default class App extends React.Component {
               ['Brazil', 1668,  209, 200, 206, 196],
             ]}
             options={{
-              chart: {
-                title: 'Distribution of all tweet topics among Countries',
-              },
+               chart: {
+                title: '(GLOBAL DATA) Overall Topic Distribution Among Countries',
+              }, 
             }}
             rootProps={{ 'data-testid': '2' }}
           />
@@ -318,18 +326,17 @@ for (var i = 0; i < unique.length; i++){
 }
       return (<div>
 <Chart
-  width='500'
+  width='700'
   height='500'
   var table = {`google.visualization.arrayToDataTable(Combined, false);`}
   chartType="Line"
   loader={<div>Loading Chart</div>}
   data={ Combined }
-  options={{
+  options={{ 
     chart: {
-      title:
-        'Time Series of tweets among different Countries',
-    },
-    width: 900,
+      title: '(QUERY DATA) Time Series of Tweets among Countries',
+    }, 
+    width: 700,
     height: 500,
     axes: {
       // Adds labels to each axis; they don't have to match the axis names.
