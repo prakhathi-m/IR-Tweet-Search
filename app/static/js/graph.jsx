@@ -130,9 +130,12 @@ export default class App extends React.Component {
         CountryArray.push(CountryArr[i][0]);
       }
         return (<div className="flex">
+        <div>
+        <p>(QUERY DATA) Tweet Distribution across the World</p>
       <Chart  // COUNTRY GEO CHART
         width='500'
         height='300'
+        style={{'border': '1px solid gray', 'margin': '0 2px'}}
         title= { 'Distribution of tweets across the World' }
         chartType="GeoChart"
         data={[
@@ -141,7 +144,7 @@ export default class App extends React.Component {
           ['United States', _.countBy(CountryArray)['USA']],
           ['Brazil', _.countBy(CountryArray)['Brazil']],
         ]}
-		
+
         options={{
 			title: '(QUERY DATA) Distribution of tweets among languages',
           colorAxis: { colors: ['#00853f', 'black', '#e31b23'] }
@@ -151,10 +154,14 @@ export default class App extends React.Component {
         mapsApiKey="AIzaSyD95TGYrRBP0eUty1QxTlLsjpCrtjLKydo"
         rootProps={{ 'data-testid': '1' }}
       />
+      </div>
+      <div>
+      <p>(GLOBAL DATA) Tweet Distribution across the World</p>
       <Chart  // GLOBAL COUNTRY GEO CHART
         width='500'
         height='300'
         title= { 'Distribution of tweets across the World' }
+        style={{'border': '1px solid gray', 'margin': '0 2px'}}
         chartType="GeoChart"
         data={[
             ['Country', 'Count'],
@@ -162,7 +169,7 @@ export default class App extends React.Component {
           ['United States', 3791],
           ['Brazil', 7560],
         ]}
-		
+
        /*  options={{
 			title: '(QUERY DATA) Distribution of tweets among languages',
           colorAxis: { colors: ['#00853f', 'black', '#e31b23'] }
@@ -170,11 +177,13 @@ export default class App extends React.Component {
 		options={{colorAxis: { colors: ['#00853f', 'black', '#e31b23'] },
 				 chart: {
                 title: '(QUERY DATA) Topic Distribution Among Countries',
-              },             }} 
+              },             }}
           // Note: you will need to get a mapsApiKey for your project.
         // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
         mapsApiKey="AIzaSyD95TGYrRBP0eUty1QxTlLsjpCrtjLKydo"
-        rootProps={{ 'data-testid': '1' }}/></div>);
+        rootProps={{ 'data-testid': '1' }}/>
+        </div>
+        </div>);
       }
  getRetLikeGraph(data) {
     		return (<div className="flex">
@@ -267,7 +276,7 @@ export default class App extends React.Component {
     				BrazilTop.push(TopicArr[i][0]);  }
     		}
     		return (<div className="flex">
-			
+
           <Chart
             width='600'
             height='300'
@@ -282,10 +291,10 @@ export default class App extends React.Component {
              options={{
 				 chart: {
                 title: '(QUERY DATA) Topic Distribution Among Countries',
-              },             }} 
-			 
+              },             }}
+
             rootProps={{ 'data-testid': '2' }}
-          /> 
+          />
           <Chart
             width='600'
             height='300'
@@ -300,7 +309,7 @@ export default class App extends React.Component {
             options={{
                chart: {
                 title: '(GLOBAL DATA) Overall Topic Distribution Among Countries',
-              }, 
+              },
             }}
             rootProps={{ 'data-testid': '2' }}
           />
@@ -386,10 +395,10 @@ for (var i = 0; i < unique.length; i++){
   chartType="Line"
   loader={<div>Loading Chart</div>}
   data={ Combined }
-  options={{ 
+  options={{
     chart: {
       title: '(QUERY DATA) Time Series of Tweets among Countries',
-    }, 
+    },
     width: 700,
     height: 500,
     axes: {
