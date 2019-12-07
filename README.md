@@ -11,3 +11,6 @@ This will download and install the dependencies listed in package.json.
 3) In the static directory, start the npm watcher to build the front end code. "npm run watch".
 4) Install flask (pip install flask).
 5) Start the server. Go to the server directory and do "python server.py".
+
+### To View the live application, follow
+http://3.134.84.37:8080/
