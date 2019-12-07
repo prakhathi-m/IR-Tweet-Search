@@ -12,5 +12,8 @@ This will download and install the dependencies listed in package.json.
 4) Install flask (pip install flask).
 5) Start the server. Go to the server directory and do "python server.py".
 
-### To View the live application, follow
+### To View the live application, using
 http://3.134.84.37:8080/
+
+#### Demo Video
+https://drive.google.com/file/d/1ke3FsmDYe9VojB6Y6ErGQ144q8WqZ9rz/view?usp=sharing
