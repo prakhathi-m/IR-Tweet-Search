@@ -1,4 +1,4 @@
-# Creating a Web Application with Python, NPM, Webpack and React
+# Creating a Web Application with Python flask and ReactJs
 
 This project involves building a Web Application to perform Information Retrieval  using popular web technologies
 like Flask, React and Python.
