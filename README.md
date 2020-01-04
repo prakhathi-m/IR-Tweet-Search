@@ -1,6 +1,6 @@
-# Creating a Web Application with Python flask and ReactJs
+# Multi-lingual Search Engine using Twitter data
 
-This project involves building a Web Application to perform Information Retrieval  using popular web technologies
+This project involves building a Web Application to perform Information Retrieval using popular web technologies
 like Flask, React and Python.
 
 #### Installing and Running
