@@ -180,7 +180,7 @@ export default class App extends React.Component {
               },             }}
           // Note: you will need to get a mapsApiKey for your project.
         // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-        mapsApiKey="AIzaSyD95TGYrRBP0eUty1QxTlLsjpCrtjLKydo"
+        mapsApiKey=" *YOUR API KEY* "
         rootProps={{ 'data-testid': '1' }}/>
         </div>
         </div>);
