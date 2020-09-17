@@ -3,7 +3,7 @@
 This project involves building a Web Application to perform Information Retrieval using popular web technologies
 like Flask, React and Python.
 The goal of the project is to successfully crawl tweets from twitter, index them and then create a user interface allowing a user to search tweets. Furthermore, the project contributes in analyzing the corpus informing the user about the impact of the tweets in the twitter sphere.
-###Tech Stack
+### Tech Stack
 Front-End	ReactJS, CSS
 Back-End	Python Flask
 Search Platform	Solr/Lucene
