@@ -4,10 +4,15 @@ This project involves building a Web Application to perform Information Retrieva
 like Flask, React and Python.
 The goal of the project is to successfully crawl tweets from twitter, index them and then create a user interface allowing a user to search tweets. Furthermore, the project contributes in analyzing the corpus informing the user about the impact of the tweets in the twitter sphere.
 ### Tech Stack
-Front-End	ReactJS, CSS
-Back-End	Python Flask
-Search Platform	Solr/Lucene
-Server Instance	Amazon EC2
+
+|    Platform     |  Tech Stack   |
+| ----------------| ------------- |
+| Front-End       | ReactJS, CSS  |
+| Back-End        | Python-Flask  |
+| Search Platform | Apache Solr   |
+| Server Instance | AWS EC2       |
+	
+	
 
 ## Detailed Report:
 https://github.com/prakhathi-m/IR-Tweet-Search/blob/master/IRP4%20Report.pdf
