@@ -9,6 +9,9 @@ Back-End	Python Flask
 Search Platform	Solr/Lucene
 Server Instance	Amazon EC2
 
+## Detailed Report:
+https://github.com/prakhathi-m/IR-Tweet-Search/blob/master/IRP4%20Report.pdf
+
 #### Installing and Running
 After cloning this repository to your computer, you need to perform the following steps to be able to run it:
 1) Ensure you have npm, python and pip installed on your machine.
