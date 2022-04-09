@@ -54,7 +54,7 @@
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.15",
     "material-ui": "^0.18.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "react-bootstrap-datetimerangepicker": "^2.0.4",
     "react-google-charts": "^2.0.29",
     "react-tap-event-plugin": "^2.0.1"
